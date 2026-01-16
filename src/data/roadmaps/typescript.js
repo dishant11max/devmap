@@ -1,8 +1,10 @@
 export const typescript = {
+  languageSlug: "typescript",
+  displayName: "TypeScript",
   nodes: [
     {
       id: "1",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Introduction",
         description:
@@ -19,7 +21,7 @@ export const typescript = {
     },
     {
       id: "2",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Environment Setup",
         description:
@@ -30,7 +32,7 @@ export const typescript = {
     },
     {
       id: "3",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Basic Types",
         description:
@@ -41,7 +43,7 @@ export const typescript = {
     },
     {
       id: "4",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Interfaces & Types",
         description:
@@ -52,7 +54,7 @@ export const typescript = {
     },
     {
       id: "5",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Functions",
         description:
@@ -63,7 +65,7 @@ export const typescript = {
     },
     {
       id: "6",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Union & Intersection",
         description: "Combining types using | and & operators.",
@@ -73,7 +75,7 @@ export const typescript = {
     },
     {
       id: "7",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Classes",
         description:
@@ -84,7 +86,7 @@ export const typescript = {
     },
     {
       id: "8",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Generics",
         description:
@@ -95,7 +97,7 @@ export const typescript = {
     },
     {
       id: "9",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Utility Types",
         description: "Partial, Pick, Omit, Record, Readonly, Required.",
@@ -111,7 +113,7 @@ export const typescript = {
     },
     {
       id: "10",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Modules",
         description: "Importing and exporting code. Managing namespaces.",
@@ -121,7 +123,7 @@ export const typescript = {
     },
     {
       id: "11",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Advanced Types",
         description:

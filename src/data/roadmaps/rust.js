@@ -1,8 +1,10 @@
 export const rust = {
+  languageSlug: "rust",
+  displayName: "Rust",
   nodes: [
     {
       id: "1",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Install Rust",
         description:
@@ -20,7 +22,7 @@ export const rust = {
     },
     {
       id: "2",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Hello World",
         description:
@@ -37,7 +39,7 @@ export const rust = {
     },
     {
       id: "3",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Cargo",
         description:
@@ -54,7 +56,7 @@ export const rust = {
     },
     {
       id: "4",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Variables & Mutability",
         description:
@@ -71,7 +73,7 @@ export const rust = {
     },
     {
       id: "5",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Data Types",
         description:
@@ -82,7 +84,7 @@ export const rust = {
     },
     {
       id: "6",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Ownership",
         description:
@@ -99,7 +101,7 @@ export const rust = {
     },
     {
       id: "7",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Borrowing & References",
         description:
@@ -116,7 +118,7 @@ export const rust = {
     },
     {
       id: "8",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Structs & Enums",
         description:
@@ -127,7 +129,7 @@ export const rust = {
     },
     {
       id: "9",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Collections",
         description: "Work with Vectors, Strings, and Hash Maps.",
@@ -137,7 +139,7 @@ export const rust = {
     },
     {
       id: "10",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Error Handling",
         description:
@@ -148,7 +150,7 @@ export const rust = {
     },
     {
       id: "11",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Traits & Generics",
         description:
@@ -159,7 +161,7 @@ export const rust = {
     },
     {
       id: "12",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Smart Pointers",
         description:
@@ -170,7 +172,7 @@ export const rust = {
     },
     {
       id: "13",
-      type: "custom",
+      type: "roadmapNode",
       data: {
         title: "Async Rust",
         description: "Asynchronous programming with async/await and Futures.",
