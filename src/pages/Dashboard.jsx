@@ -90,103 +90,164 @@ const getAllProgress = () => {
   return { allProgress, history };
 };
 
+import { supabase } from "../lib/supabase";
+import { useUserProfile } from "../hooks/useUserProfile";
+
+// ... (keep getAllProgress/imports same, just updating inside component)
+
 export default function Dashboard() {
   const { user } = useAuth();
+  const { profile } = useUserProfile(); // Use our new hook
+
   const [progressData, setProgressData] = useState({});
   const [totalCompletedNodes, setTotalCompletedNodes] = useState(0);
   const [contributionData, setContributionData] = useState([]);
+
+  // Local state for stats (will be overridden by profile if logged in)
   const [level, setLevel] = useState(1);
   const [xp, setXp] = useState(0);
+
   const [recentActivity, setRecentActivity] = useState([]);
   const [radarData, setRadarData] = useState([]);
 
   useEffect(() => {
-    const { allProgress, history } = getAllProgress();
-    setProgressData(allProgress);
+    async function loadDashboardData() {
+      let aggregatedProgress = {};
+      let fullHistory = [];
 
-    // Calculate totals
-    const total = Object.values(allProgress).reduce(
-      (acc, curr) => acc + curr.completed,
-      0,
-    );
-    setTotalCompletedNodes(total);
+      if (user) {
+        // --- LOGGED IN: Fetch aggregate from DB ---
+        try {
+          const { data, error } = await supabase
+            .from("user_progress")
+            .select("node_id, language_slug, completed_at")
+            .eq("user_id", user.id);
 
-    // Gamification Logic
-    // Level up every 10 steps
-    const newLevel = Math.floor(total / 10) + 1;
-    setLevel(newLevel);
+          if (!error && data) {
+            // Transform DB rows into the structure Dashboard expects
+            // We need to initialize the structure first for all languages
+            languages.forEach((lang) => {
+              aggregatedProgress[lang.id] = {
+                completed: 0,
+                total: roadmaps[lang.id]?.nodes?.length || 20,
+                items: [],
+                name: lang.name,
+              };
+            });
 
-    // XP is just total * 100 for now
-    setXp(total * 100);
+            // Fill it
+            data.forEach((row) => {
+              if (aggregatedProgress[row.language_slug]) {
+                aggregatedProgress[row.language_slug].completed++;
+                aggregatedProgress[row.language_slug].items.push({
+                  id: row.node_id,
+                  date: row.completed_at,
+                });
 
-    // Recent Activity (Last 5 items)
-    // Sort by date desc
-    const sortedHistory = [...history].sort(
-      (a, b) => new Date(b.date) - new Date(a.date),
-    );
-    setRecentActivity(sortedHistory.slice(0, 5));
+                fullHistory.push({
+                  date: row.completed_at,
+                  language: aggregatedProgress[row.language_slug].name,
+                  nodeId: row.node_id,
+                });
+              }
+            });
+          }
+        } catch (err) {
+          console.error("Dashboard fetch failed", err);
+        }
+      } else {
+        // --- GUEST: Use Local Storage helper ---
+        const { allProgress, history } = getAllProgress();
+        aggregatedProgress = allProgress;
+        fullHistory = history;
+      }
 
-    // Radar Chart Data Logic (Mocked Categories based on Lang names for demo)
-    // In real app, we'd tag languages with categories (Frontend, Backend, etc)
-    // Here lets map specific langs to mock categories
-    const categories = {
-      Frontend: ["React", "HTML", "CSS", "JavaScript", "TypeScript"],
-      Backend: ["Node.js", "Python", "Go", "Java", "SQL"],
-      Tools: ["Git", "Docker", "Linux"],
-      CS: ["Algorithms", "C++", "C"],
-    };
+      // --- COMMON LOGIC (Charts & Stats) ---
+      setProgressData(aggregatedProgress);
 
-    const radarStats = [
-      { subject: "Frontend", A: 0, fullMark: 100 },
-      { subject: "Backend", A: 0, fullMark: 100 },
-      { subject: "Tools", A: 0, fullMark: 100 },
-      { subject: "CS Theory", A: 0, fullMark: 100 },
-      { subject: "Design", A: 0, fullMark: 100 },
-    ];
+      const total = Object.values(aggregatedProgress).reduce(
+        (acc, curr) => acc + curr.completed,
+        0,
+      );
+      setTotalCompletedNodes(total);
 
-    Object.values(allProgress).forEach((p) => {
-      // Simple heuristic mapping
-      if (categories.Frontend.includes(p.name))
-        radarStats[0].A += p.completed * 5;
-      else if (categories.Backend.includes(p.name))
-        radarStats[1].A += p.completed * 5;
-      else if (categories.Tools.includes(p.name))
-        radarStats[2].A += p.completed * 5;
-      else if (categories.CS.includes(p.name))
-        radarStats[3].A += p.completed * 5;
-      else radarStats[4].A += p.completed * 5; // Fallback to design/misc
-    });
+      // Level/XP (If guest, calculate. If auth, use profile but fallback to calc if loading)
+      if (!user) {
+        setLevel(Math.floor(total / 10) + 1);
+        setXp(total * 100);
+      }
 
-    setRadarData(radarStats);
+      // Recent Activity
+      const sortedHistory = [...fullHistory].sort(
+        (a, b) => new Date(b.date) - new Date(a.date),
+      );
+      setRecentActivity(sortedHistory.slice(0, 5));
 
-    // Contribution Grid Logic
-    // We want the last 22 weeks (approx 5 months) to fill the chart nicely
-    const today = new Date();
-    const gridData = [];
-    const dateMap = {};
+      // Radar Chart
+      const categories = {
+        Frontend: ["React", "HTML", "CSS", "JavaScript", "TypeScript"],
+        Backend: ["Node.js", "Python", "Go", "Java", "SQL"],
+        Tools: ["Git", "Docker", "Linux"],
+        CS: ["Algorithms", "C++", "C"],
+      };
 
-    history.forEach((h) => {
-      const day = h.date.split("T")[0];
-      dateMap[day] = (dateMap[day] || 0) + 1;
-    });
+      const radarStats = [
+        { subject: "Frontend", A: 0, fullMark: 100 },
+        { subject: "Backend", A: 0, fullMark: 100 },
+        { subject: "Tools", A: 0, fullMark: 100 },
+        { subject: "CS Theory", A: 0, fullMark: 100 },
+        { subject: "Design", A: 0, fullMark: 100 },
+      ];
 
-    // Start 22 weeks ago
-    const startDate = new Date();
-    startDate.setDate(today.getDate() - 22 * 7);
+      Object.values(aggregatedProgress).forEach((p) => {
+        if (categories.Frontend.includes(p.name))
+          radarStats[0].A += p.completed * 5;
+        else if (categories.Backend.includes(p.name))
+          radarStats[1].A += p.completed * 5;
+        else if (categories.Tools.includes(p.name))
+          radarStats[2].A += p.completed * 5;
+        else if (categories.CS.includes(p.name))
+          radarStats[3].A += p.completed * 5;
+        else radarStats[4].A += p.completed * 5;
+      });
+      setRadarData(radarStats);
 
-    for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
-      const dayStr = d.toISOString().split("T")[0];
-      const count = dateMap[dayStr] || 0;
-      let level = 0;
-      if (count > 0) level = 1;
-      if (count > 2) level = 2;
-      if (count > 4) level = 3;
-      if (count > 6) level = 4;
+      // Contribution Grid
+      const today = new Date();
+      const gridData = [];
+      const dateMap = {};
 
-      gridData.push({ date: dayStr, count, level });
+      fullHistory.forEach((h) => {
+        const day = h.date.split("T")[0];
+        dateMap[day] = (dateMap[day] || 0) + 1;
+      });
+
+      const startDate = new Date();
+      startDate.setDate(today.getDate() - 22 * 7);
+
+      for (
+        let d = new Date(startDate);
+        d <= today;
+        d.setDate(d.getDate() + 1)
+      ) {
+        const dayStr = d.toISOString().split("T")[0];
+        const count = dateMap[dayStr] || 0;
+        let lvl = 0;
+        if (count > 0) lvl = 1;
+        if (count > 2) lvl = 2;
+        if (count > 4) lvl = 3;
+        if (count > 6) lvl = 4;
+        gridData.push({ date: dayStr, count, level: lvl });
+      }
+      setContributionData(gridData);
     }
-    setContributionData(gridData);
-  }, []);
+
+    loadDashboardData();
+  }, [user]); // Re-run when auth state changes
+
+  // Derived State for UI (Use Profile if available)
+  const displayLevel = profile?.level || level;
+  const displayXp = profile?.total_xp || xp;
 
   const inProgressRoadmaps = [];
   const completedRoadmaps = [];
@@ -210,7 +271,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-6 relative z-10">
             <div className="relative">
               <div className="h-24 w-24 rounded-full bg-secondary flex items-center justify-center text-4xl font-bold text-primary ring-4 ring-background shadow-xl">
-                {level}
+                {displayLevel}
               </div>
               <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                 Level
@@ -224,12 +285,12 @@ export default function Dashboard() {
               <div className="flex items-center gap-3 mt-2 text-muted-foreground">
                 <span className="flex items-center gap-1.5">
                   <Zap className="h-4 w-4 text-yellow-500" />
-                  {xp} XP Earned
+                  {displayXp} XP Earned
                 </span>
                 <span>•</span>
                 <span className="flex items-center gap-1.5">
                   <Target className="h-4 w-4 text-red-500" />
-                  Next Level: {level * 10 - totalCompletedNodes} steps
+                  Next Level: {displayLevel * 10 - totalCompletedNodes} steps
                 </span>
               </div>
             </div>
