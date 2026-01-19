@@ -245,9 +245,10 @@ export default function Dashboard() {
     loadDashboardData();
   }, [user]); // Re-run when auth state changes
 
-  // Derived State for UI (Use Profile if available)
-  const displayLevel = profile?.level || level;
-  const displayXp = profile?.total_xp || xp;
+  // Derived State for UI
+  // We use the variables we calculated in useEffect above, which are derived from the REAL counts.
+  const displayLevel = level;
+  const displayXp = xp;
 
   const inProgressRoadmaps = [];
   const completedRoadmaps = [];
