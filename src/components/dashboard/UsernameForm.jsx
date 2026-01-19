@@ -1,13 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import { Button } from "../ui/Button";
-import { Check, X, Loader2 } from "lucide-react";
+import { Check, X, Loader2, Pencil } from "lucide-react";
 
 export function UsernameForm({ currentUsername, userId, onSuccess }) {
   const [username, setUsername] = useState(currentUsername || "");
+  const [savedUsername, setSavedUsername] = useState(currentUsername || "");
   const [isEditing, setIsEditing] = useState(!currentUsername);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Sync with prop changes
+  useEffect(() => {
+    if (currentUsername) {
+      setSavedUsername(currentUsername);
+      setUsername(currentUsername);
+      setIsEditing(false);
+    }
+  }, [currentUsername]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,6 +60,8 @@ export function UsernameForm({ currentUsername, userId, onSuccess }) {
       if (updateError) {
         setError(updateError.message);
       } else {
+        // Update local state immediately
+        setSavedUsername(trimmed);
         setIsEditing(false);
         if (onSuccess) onSuccess(trimmed);
       }
@@ -60,16 +72,17 @@ export function UsernameForm({ currentUsername, userId, onSuccess }) {
     }
   };
 
-  if (!isEditing && currentUsername) {
+  if (!isEditing && savedUsername) {
     return (
       <div className="flex items-center gap-2 text-sm">
-        <span className="text-muted-foreground">@{currentUsername}</span>
+        <span className="text-muted-foreground">@{savedUsername}</span>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => setIsEditing(true)}
-          className="h-6 px-2 text-xs"
+          className="h-6 px-2 text-xs gap-1"
         >
+          <Pencil className="h-3 w-3" />
           Edit
         </Button>
       </div>
@@ -101,14 +114,14 @@ export function UsernameForm({ currentUsername, userId, onSuccess }) {
             <Check className="h-4 w-4" />
           )}
         </Button>
-        {currentUsername && (
+        {savedUsername && (
           <Button
             type="button"
             variant="ghost"
             size="sm"
             onClick={() => {
               setIsEditing(false);
-              setUsername(currentUsername);
+              setUsername(savedUsername);
               setError(null);
             }}
             className="h-8 w-8 p-0"
