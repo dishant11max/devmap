@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import {
   Card,
   CardContent,
@@ -90,6 +91,7 @@ const getAllProgress = () => {
 };
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const [progressData, setProgressData] = useState({});
   const [totalCompletedNodes, setTotalCompletedNodes] = useState(0);
   const [contributionData, setContributionData] = useState([]);
@@ -216,7 +218,8 @@ export default function Dashboard() {
             </div>
             <div>
               <h1 className="text-3xl font-bold tracking-tight">
-                Welcome back, Developer
+                Welcome back,{" "}
+                {user?.user_metadata?.full_name?.split(" ")[0] || "Developer"}
               </h1>
               <div className="flex items-center gap-3 mt-2 text-muted-foreground">
                 <span className="flex items-center gap-1.5">

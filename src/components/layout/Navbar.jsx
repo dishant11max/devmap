@@ -1,11 +1,23 @@
 import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { Component, Map, Menu, X } from "lucide-react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Component, Map, Menu, X, LogIn, LogOut, User } from "lucide-react";
 import { ThemeToggle } from "../ui/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../../context/AuthContext";
+import { Button } from "../ui/Button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signInWithGithub, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -16,6 +28,11 @@ export function Navbar() {
     { to: "/dashboard", label: "Dashboard" },
     { to: "/about", label: "About" },
   ];
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -48,6 +65,57 @@ export function Navbar() {
 
         <div className="flex items-center gap-4">
           <ThemeToggle />
+
+          {/* Auth Button (Desktop) */}
+          <div className="hidden md:block">
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="relative h-8 w-8 rounded-full"
+                  >
+                    <img
+                      src={user.user_metadata.avatar_url}
+                      alt={user.email}
+                      className="h-8 w-8 rounded-full border border-border"
+                    />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {user.user_metadata.full_name || "Developer"}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Dashboard</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                onClick={signInWithGithub}
+                variant="default"
+                size="sm"
+                className="gap-2"
+              >
+                <LogIn className="h-4 w-4" />
+                <span>Login</span>
+              </Button>
+            )}
+          </div>
 
           {/* Mobile Menu Toggle */}
           <button
@@ -85,6 +153,36 @@ export function Navbar() {
                   {link.label}
                 </NavLink>
               ))}
+
+              <div className="border-t border-border pt-4 mt-2">
+                {user ? (
+                  <div className="flex items-center justify-between px-2">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={user.user_metadata.avatar_url}
+                        alt={user.email}
+                        className="h-8 w-8 rounded-full"
+                      />
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">
+                          {user.user_metadata.full_name}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          Logged in
+                        </span>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="icon" onClick={handleSignOut}>
+                      <LogOut className="h-5 w-5" />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button onClick={signInWithGithub} className="w-full gap-2">
+                    <LogIn className="h-4 w-4" />
+                    Login with GitHub
+                  </Button>
+                )}
+              </div>
             </nav>
           </motion.div>
         )}
