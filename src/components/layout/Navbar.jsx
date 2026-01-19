@@ -73,13 +73,19 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="relative h-8 w-8 rounded-full"
+                    className="relative h-9 w-9 rounded-full overflow-hidden bg-secondary/50 border border-border p-0"
                   >
-                    <img
-                      src={user.user_metadata.avatar_url}
-                      alt={user.email}
-                      className="h-8 w-8 rounded-full border border-border"
-                    />
+                    {user.user_metadata?.avatar_url ? (
+                      <img
+                        src={user.user_metadata.avatar_url}
+                        alt={user.user_metadata?.full_name || "User"}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span className="font-bold text-xs">
+                        {(user.email?.[0] || "U").toUpperCase()}
+                      </span>
+                    )}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end" forceMount>
