@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -15,10 +15,13 @@ import {
   Target,
   Zap,
   TrendingUp,
+  Share2,
+  Check,
 } from "lucide-react";
 import { AchievementBadges } from "../components/dashboard/AchievementBadges";
 import { DailyGoalCard } from "../components/dashboard/DailyGoalCard";
 import { AnimatedFlame } from "../components/dashboard/AnimatedFlame";
+import { UsernameForm } from "../components/dashboard/UsernameForm";
 import { languages } from "../data/languages";
 import { roadmaps } from "../data/roadmaps";
 import { Button } from "../components/ui/Button";
@@ -113,7 +116,7 @@ export default function Dashboard() {
   const [radarData, setRadarData] = useState([]);
 
   // Real-time subscription ref
-  const subscriptionRef = React.useRef(null);
+  const subscriptionRef = useRef(null);
 
   useEffect(() => {
     async function loadDashboardData() {
@@ -326,10 +329,38 @@ export default function Dashboard() {
                   Next Level: {displayLevel * 10 - totalCompletedNodes} steps
                 </span>
               </div>
+              {/* Username Form */}
+              {user && (
+                <div className="mt-3">
+                  <UsernameForm
+                    currentUsername={profile?.username}
+                    userId={user.id}
+                    onSuccess={(newUsername) => {
+                      // Trigger profile refresh
+                      window.location.reload();
+                    }}
+                  />
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="flex gap-3 relative z-10">
+          <div className="flex flex-col sm:flex-row gap-3 relative z-10">
+            {/* Share Profile Button */}
+            {user && profile?.username && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const url = `${window.location.origin}/u/${profile.username}`;
+                  navigator.clipboard.writeText(url);
+                  alert(`Profile link copied!\n${url}`);
+                }}
+                className="gap-2"
+              >
+                <Share2 className="h-4 w-4" />
+                Share Profile
+              </Button>
+            )}
             <Button asChild variant="outline">
               <Link to="/til">Today I Learned</Link>
             </Button>

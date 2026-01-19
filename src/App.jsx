@@ -11,6 +11,7 @@ import About from "./pages/About";
 
 import Dashboard from "./pages/Dashboard";
 import TIL from "./pages/TIL";
+import PublicProfile from "./pages/PublicProfile";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/til" element={<TIL />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/u/:username" element={<PublicProfile />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
           </Routes>
