@@ -8,6 +8,7 @@ import Resources from "./pages/Resources";
 import About from "./pages/About";
 
 import Dashboard from "./pages/Dashboard";
+import TIL from "./pages/TIL";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/roadmap/:languageSlug" element={<RoadmapViewer />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/about" element={<About />} />
+            <Route path="/til" element={<TIL />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

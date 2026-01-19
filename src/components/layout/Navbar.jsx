@@ -11,6 +11,7 @@ export function Navbar() {
 
   const navLinks = [
     { to: "/languages", label: "Languages" },
+    { to: "/til", label: "TIL" },
     { to: "/resources", label: "Resources" },
     { to: "/dashboard", label: "Dashboard" },
     { to: "/about", label: "About" },
