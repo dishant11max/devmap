@@ -1,10 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+
+// Check if WebGL is available
+function isWebGLAvailable() {
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+    );
+  } catch (e) {
+    return false;
+  }
+}
 
 export function WebGLShader() {
   const canvasRef = useRef(null);
+  const [webGLSupported, setWebGLSupported] = useState(true);
   const sceneRef = useRef({
     scene: null,
     camera: null,
@@ -15,6 +29,13 @@ export function WebGLShader() {
   });
 
   useEffect(() => {
+    // Check WebGL support first
+    if (!isWebGLAvailable()) {
+      setWebGLSupported(false);
+      console.warn("WebGL not available, skipping shader effect");
+      return;
+    }
+
     if (!canvasRef.current) return;
 
     const canvas = canvasRef.current;
@@ -76,7 +97,7 @@ export function WebGLShader() {
 
       const positions = new THREE.BufferAttribute(
         new Float32Array(position),
-        3
+        3,
       );
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute("position", positions);
@@ -116,9 +137,15 @@ export function WebGLShader() {
       }
     };
 
-    initScene();
-    animate();
-    window.addEventListener("resize", handleResize);
+    try {
+      initScene();
+      animate();
+      window.addEventListener("resize", handleResize);
+    } catch (error) {
+      console.warn("WebGL initialization failed:", error);
+      setWebGLSupported(false);
+      return;
+    }
 
     return () => {
       if (refs.animationId) cancelAnimationFrame(refs.animationId);
@@ -133,6 +160,11 @@ export function WebGLShader() {
       refs.renderer?.dispose();
     };
   }, []);
+
+  // Don't render canvas if WebGL is not supported - graceful degradation
+  if (!webGLSupported) {
+    return null;
+  }
 
   return (
     <canvas
