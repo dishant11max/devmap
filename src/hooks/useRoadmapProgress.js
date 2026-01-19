@@ -151,16 +151,29 @@ export function useRoadmapProgress(languageSlug) {
           setCompletedItems(previousItems); // Rollback
         }
       } else {
-        // INSERT
-        const { error } = await supabase.from("user_progress").insert({
+        // UPSERT (handles duplicates gracefully)
+        console.log("Attempting UPSERT:", {
           user_id: user.id,
           node_id: nodeId,
           language_slug: languageSlug,
         });
+        const { error } = await supabase.from("user_progress").upsert(
+          {
+            user_id: user.id,
+            node_id: nodeId,
+            language_slug: languageSlug,
+          },
+          { onConflict: "user_id,node_id", ignoreDuplicates: true },
+        );
 
         if (error) {
-          console.error("Failed to save progress", error);
+          console.error(
+            "Failed to save progress - FULL ERROR:",
+            JSON.stringify(error, null, 2),
+          );
           setCompletedItems(previousItems); // Rollback
+        } else {
+          console.log("UPSERT SUCCESS!");
         }
       }
     } else {

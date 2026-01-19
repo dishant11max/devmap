@@ -11,12 +11,14 @@ import {
 import {
   ArrowRight,
   Trophy,
-  Flame,
   CheckCircle2,
   Target,
   Zap,
   TrendingUp,
 } from "lucide-react";
+import { AchievementBadges } from "../components/dashboard/AchievementBadges";
+import { DailyGoalCard } from "../components/dashboard/DailyGoalCard";
+import { AnimatedFlame } from "../components/dashboard/AnimatedFlame";
 import { languages } from "../data/languages";
 import { roadmaps } from "../data/roadmaps";
 import { Button } from "../components/ui/Button";
@@ -97,21 +99,25 @@ import { useUserProfile } from "../hooks/useUserProfile";
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const { profile } = useUserProfile(); // Use our new hook
+  const { profile } = useUserProfile();
 
   const [progressData, setProgressData] = useState({});
   const [totalCompletedNodes, setTotalCompletedNodes] = useState(0);
   const [contributionData, setContributionData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Local state for stats (will be overridden by profile if logged in)
   const [level, setLevel] = useState(1);
   const [xp, setXp] = useState(0);
 
   const [recentActivity, setRecentActivity] = useState([]);
   const [radarData, setRadarData] = useState([]);
 
+  // Real-time subscription ref
+  const subscriptionRef = React.useRef(null);
+
   useEffect(() => {
     async function loadDashboardData() {
+      setIsLoading(true);
       let aggregatedProgress = {};
       let fullHistory = [];
 
@@ -125,7 +131,6 @@ export default function Dashboard() {
 
           if (!error && data) {
             // Transform DB rows into the structure Dashboard expects
-            // We need to initialize the structure first for all languages
             languages.forEach((lang) => {
               aggregatedProgress[lang.id] = {
                 completed: 0,
@@ -171,11 +176,10 @@ export default function Dashboard() {
       );
       setTotalCompletedNodes(total);
 
-      // Level/XP (If guest, calculate. If auth, use profile but fallback to calc if loading)
-      if (!user) {
-        setLevel(Math.floor(total / 10) + 1);
-        setXp(total * 100);
-      }
+      // ALWAYS calculate Level/XP from real data
+      const calculatedLevel = Math.floor(total / 10) + 1;
+      setLevel(calculatedLevel);
+      setXp(total * 100);
 
       // Recent Activity
       const sortedHistory = [...fullHistory].sort(
@@ -240,9 +244,37 @@ export default function Dashboard() {
         gridData.push({ date: dayStr, count, level: lvl });
       }
       setContributionData(gridData);
+      setIsLoading(false);
     }
 
     loadDashboardData();
+
+    // --- REAL-TIME SUBSCRIPTION ---
+    if (user) {
+      subscriptionRef.current = supabase
+        .channel("user_progress_changes")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "user_progress",
+            filter: `user_id=eq.${user.id}`,
+          },
+          () => {
+            // Reload data when something changes
+            console.log("Real-time update received!");
+            loadDashboardData();
+          },
+        )
+        .subscribe();
+    }
+
+    return () => {
+      if (subscriptionRef.current) {
+        supabase.removeChannel(subscriptionRef.current);
+      }
+    };
   }, [user]); // Re-run when auth state changes
 
   // Derived State for UI
@@ -331,14 +363,16 @@ export default function Dashboard() {
                   <CardTitle className="text-sm font-medium text-muted-foreground">
                     Current Streak
                   </CardTitle>
-                  <Flame className="h-4 w-4 text-orange-500" />
+                  <AnimatedFlame isActive={totalCompletedNodes > 0} />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
                     {totalCompletedNodes > 0 ? "3 Days" : "0 Days"}
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    You're on fire!
+                    {totalCompletedNodes > 0
+                      ? "You're on fire!"
+                      : "Start learning!"}
                   </p>
                 </CardContent>
               </Card>
@@ -471,6 +505,33 @@ export default function Dashboard() {
 
           {/* Sidebar Column */}
           <div className="space-y-8">
+            {/* Daily Goal */}
+            <DailyGoalCard
+              completedToday={
+                recentActivity.filter(
+                  (a) =>
+                    new Date(a.date).toDateString() ===
+                    new Date().toDateString(),
+                ).length
+              }
+              goal={3}
+            />
+
+            {/* Achievements */}
+            <AchievementBadges
+              stats={{
+                totalCompleted: totalCompletedNodes,
+                streak: totalCompletedNodes > 0 ? 3 : 0, // Mock streak for now
+                roadmapsStarted: Object.values(progressData).filter(
+                  (p) => p.completed > 0,
+                ).length,
+                roadmapsCompleted: Object.values(progressData).filter(
+                  (p) => p.completed >= p.total,
+                ).length,
+                level: displayLevel,
+              }}
+            />
+
             {/* Skill Radar */}
             <Card className="h-fit">
               <CardHeader>
