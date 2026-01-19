@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabase";
 import { Button } from "../ui/Button";
-import { Check, X, Loader2, Pencil } from "lucide-react";
+import { Check, X, Loader2 } from "lucide-react";
 
 export function UsernameForm({ currentUsername, userId, onSuccess }) {
   const [username, setUsername] = useState(currentUsername || "");
@@ -76,15 +76,6 @@ export function UsernameForm({ currentUsername, userId, onSuccess }) {
     return (
       <div className="flex items-center gap-2 text-sm">
         <span className="text-muted-foreground">@{savedUsername}</span>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setIsEditing(true)}
-          className="h-6 px-2 text-xs gap-1"
-        >
-          <Pencil className="h-3 w-3" />
-          Edit
-        </Button>
       </div>
     );
   }
