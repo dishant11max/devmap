@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppLayout } from "./components/layout/AppLayout";
+import { ScrollToTop } from "./components/layout/ScrollToTop";
 import { ThemeProvider } from "./context/ThemeContext";
 import Home from "./pages/Home";
 import Languages from "./pages/Languages";
@@ -14,6 +15,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<Home />} />
