@@ -73,7 +73,13 @@ export const python = {
           "Defining functions, arguments, return values, lambda functions, and importing modules.",
         time: "5 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Real Python: Defining Your Own Python Function",
+            url: "https://realpython.com/defining-your-own-python-function/",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -105,7 +111,13 @@ export const python = {
           "Reading/Writing files, Try/Except blocks, Context Managers (with statement).",
         time: "4 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Python File Handling - W3Schools",
+            url: "https://www.w3schools.com/python/python_file_handling.asp",
+          },
+        ],
       },
       type: "roadmapNode",
     },

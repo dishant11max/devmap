@@ -54,7 +54,13 @@ export const javascript = {
           "Conditional statements (if/else), switches, and loops (for, while).",
         time: "3 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "MDN: Control Flow and Error Handling",
+            url: "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling",
+          },
+        ],
       },
       type: "roadmapNode",
     },

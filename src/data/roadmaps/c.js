@@ -30,7 +30,13 @@ export const c = {
           "Primitive types (int, float, char), modifiers (long, short, unsigned).",
         time: "4 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "C Variables and Data Types - GeeksforGeeks",
+            url: "https://www.geeksforgeeks.org/c-variables/",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -62,7 +68,13 @@ export const c = {
           "Array indexing, memory layout, null-terminated strings, string.h functions.",
         time: "6 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "C Arrays - Programiz",
+            url: "https://www.programiz.com/c-programming/c-arrays",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -75,7 +87,13 @@ export const c = {
           "Stack vs Heap, malloc, calloc, realloc, and free. Preventing memory leaks.",
         time: "8 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Dynamic Memory Allocation in C - freeCodeCamp",
+            url: "https://www.freecodecamp.org/news/dynamic-memory-allocation-in-c/",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -88,7 +106,13 @@ export const c = {
           "Defining custom data types, padding, alignment, bit fields.",
         time: "5 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "C Structures - Tutorialspoint",
+            url: "https://www.tutorialspoint.com/cprogramming/c_structures.htm",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -101,7 +125,13 @@ export const c = {
           "fopen, fread, fwrite. Macros, include guards, conditional compilation.",
         time: "6 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "C File I/O - Cprogramming.com",
+            url: "https://www.cprogramming.com/tutorial/cfileio.html",
+          },
+        ],
       },
       type: "roadmapNode",
     },

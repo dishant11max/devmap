@@ -35,7 +35,13 @@ export const java = {
           "Loops, Conditionals, Switch Expressions, and Single/Multi-dimensional Arrays.",
         time: "5 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Java Control Flow - Baeldung",
+            url: "https://www.baeldung.com/java-control-structures",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -66,7 +72,13 @@ export const java = {
           "Inheritance, Polymorphism, Abstraction, Interfaces, Encapsulation.",
         time: "10 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Java Inheritance - W3Schools",
+            url: "https://www.w3schools.com/java/java_inheritance.asp",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -78,7 +90,13 @@ export const java = {
         description: "Try/Catch, Throw, Throws, Custom Exceptions.",
         time: "4 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Java Exception Handling - Jenkov",
+            url: "https://jenkov.com/tutorials/java-exception-handling/index.html",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -109,7 +127,13 @@ export const java = {
           "Functional programming in Java, Stream API, Lambda Expressions.",
         time: "6 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Introduction to Java Streams - Baeldung",
+            url: "https://www.baeldung.com/java-8-streams",
+          },
+        ],
       },
       type: "roadmapNode",
     },

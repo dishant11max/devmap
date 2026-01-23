@@ -79,6 +79,12 @@ export const rust = {
         description:
           "Scalar and Compound types: integers, floats, booleans, chars, tuples, arrays.",
         status: "pending",
+        resources: [
+          {
+            title: "Data Types",
+            url: "https://doc.rust-lang.org/book/ch03-02-data-types.html",
+          },
+        ],
       },
       position: { x: 400, y: 450 },
     },
@@ -124,6 +130,12 @@ export const rust = {
         description:
           "Define custom data structures. Learn about Option<T> and pattern matching.",
         status: "pending",
+        resources: [
+          {
+            title: "Using Structs to Structure Related Data",
+            url: "https://doc.rust-lang.org/book/ch05-00-structs.html",
+          },
+        ],
       },
       position: { x: 250, y: 900 },
     },
@@ -134,6 +146,12 @@ export const rust = {
         title: "Collections",
         description: "Work with Vectors, Strings, and Hash Maps.",
         status: "pending",
+        resources: [
+          {
+            title: "Common Collections",
+            url: "https://doc.rust-lang.org/book/ch08-00-common-collections.html",
+          },
+        ],
       },
       position: { x: 250, y: 1050 },
     },
@@ -145,6 +163,12 @@ export const rust = {
         description:
           "Learn unrecoverable errors with panic! and recoverable errors with Result.",
         status: "pending",
+        resources: [
+          {
+            title: "Error Handling",
+            url: "https://doc.rust-lang.org/book/ch09-00-error-handling.html",
+          },
+        ],
       },
       position: { x: 250, y: 1200 },
     },
@@ -156,6 +180,12 @@ export const rust = {
         description:
           "Define shared behavior using traits and write flexible code with generics.",
         status: "pending",
+        resources: [
+          {
+            title: "Traits: Defining Shared Behavior",
+            url: "https://doc.rust-lang.org/book/ch10-02-traits.html",
+          },
+        ],
       },
       position: { x: 250, y: 1350 },
     },
@@ -167,6 +197,12 @@ export const rust = {
         description:
           "Box<T>, Rc<T>, RefCell<T>, and the Deref and Drop traits.",
         status: "pending",
+        resources: [
+          {
+            title: "Smart Pointers",
+            url: "https://doc.rust-lang.org/book/ch15-00-smart-pointers.html",
+          },
+        ],
       },
       position: { x: 250, y: 1500 },
     },
@@ -177,6 +213,12 @@ export const rust = {
         title: "Async Rust",
         description: "Asynchronous programming with async/await and Futures.",
         status: "pending",
+        resources: [
+          {
+            title: "Asynchronous Programming in Rust",
+            url: "https://rust-lang.github.io/async-book/",
+          },
+        ],
       },
       position: { x: 250, y: 1650 },
     },

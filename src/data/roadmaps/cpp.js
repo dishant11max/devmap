@@ -29,7 +29,13 @@ export const cpp = {
         description: "Variables, Types, Arithmetic, If/Switch, Loops.",
         time: "5 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "LearnCpp - C++ Basics",
+            url: "https://www.learncpp.com/cpp-tutorial/introduction-to-objects-and-variables/",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -61,7 +67,13 @@ export const cpp = {
           "Classes, Structs, Encapsulation, Constructors/Destructors.",
         time: "8 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Object Oriented Programming in C++ - GeeksforGeeks",
+            url: "https://www.geeksforgeeks.org/object-oriented-programming-in-cpp/",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -74,7 +86,13 @@ export const cpp = {
           "Inheritance, Polymorphism, Virtual Functions, Operator Overloading.",
         time: "10 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Virtual Functions - LearnCpp",
+            url: "https://www.learncpp.com/cpp-tutorial/virtual-functions/",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -106,7 +124,13 @@ export const cpp = {
           "Smart Pointers (unique/shared), Lambda functions, Move Semantics.",
         time: "15 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Smart Pointers - Microsoft Docs",
+            url: "https://learn.microsoft.com/en-us/cpp/cpp/smart-pointers-modern-cpp",
+          },
+        ],
       },
       type: "roadmapNode",
     },

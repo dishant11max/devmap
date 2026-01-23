@@ -34,7 +34,18 @@ export const go = {
         description: "Variables, Functions, Loop (only for), Switch, Defer.",
         time: "4 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Go by Example: Variables",
+            url: "https://gobyexample.com/variables",
+          },
+          {
+            type: "doc",
+            title: "Go by Example: For",
+            url: "https://gobyexample.com/for",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -65,7 +76,18 @@ export const go = {
           "Receivers on types, Interface implementation (implicit), Error interface.",
         time: "6 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Go by Example: Methods",
+            url: "https://gobyexample.com/methods",
+          },
+          {
+            type: "doc",
+            title: "Go by Example: Interfaces",
+            url: "https://gobyexample.com/interfaces",
+          },
+        ],
       },
       type: "roadmapNode",
     },
@@ -96,7 +118,13 @@ export const go = {
         description: "Go test, go fmt, go vet, benchmarks.",
         time: "4 hours",
         status: "pending",
-        resources: [],
+        resources: [
+          {
+            type: "doc",
+            title: "Testing - Go Documentation",
+            url: "https://go.dev/doc/tutorial/add-a-test",
+          },
+        ],
       },
       type: "roadmapNode",
     },
