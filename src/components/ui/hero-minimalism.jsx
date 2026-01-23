@@ -67,7 +67,6 @@ export default function MinimalHero() {
           if (p.opacity <= 0) reset(p);
         }
 
-        // Using a neutral color for particles that works in both themes (white/light gray)
         ctx.fillStyle = `rgba(160, 160, 160, ${p.opacity})`;
         ctx.fillRect(p.x, p.y, 0.6, Math.random() * 2 + 1);
       });
@@ -98,7 +97,6 @@ export default function MinimalHero() {
         @import url('https://fonts.cdnfonts.com/css/hubot-sans');
 
         .minimal-root {
-          /* We rely on Tailwind's bg-background and text-foreground variables which are set on the body/root */
         }
 
         /* Accent Lines */
@@ -110,7 +108,7 @@ export default function MinimalHero() {
         }
         .hline, .vline {
           position: absolute;
-          background: currentColor; /* Use current text color (foreground) or border color */
+          background: currentColor;
           opacity: .1;
           will-change: transform, opacity;
         }

@@ -98,8 +98,6 @@ const getAllProgress = () => {
 import { supabase } from "../lib/supabase";
 import { useUserProfile } from "../hooks/useUserProfile";
 
-// ... (keep getAllProgress/imports same, just updating inside component)
-
 export default function Dashboard() {
   const { user } = useAuth();
   const { profile } = useUserProfile();
@@ -115,7 +113,6 @@ export default function Dashboard() {
   const [recentActivity, setRecentActivity] = useState([]);
   const [radarData, setRadarData] = useState([]);
 
-  // Real-time subscription ref
   const subscriptionRef = useRef(null);
 
   useEffect(() => {
@@ -125,7 +122,6 @@ export default function Dashboard() {
       let fullHistory = [];
 
       if (user) {
-        // --- LOGGED IN: Fetch aggregate from DB ---
         try {
           const { data, error } = await supabase
             .from("user_progress")
@@ -164,13 +160,11 @@ export default function Dashboard() {
           console.error("Dashboard fetch failed", err);
         }
       } else {
-        // --- GUEST: Use Local Storage helper ---
         const { allProgress, history } = getAllProgress();
         aggregatedProgress = allProgress;
         fullHistory = history;
       }
 
-      // --- COMMON LOGIC (Charts & Stats) ---
       setProgressData(aggregatedProgress);
 
       const total = Object.values(aggregatedProgress).reduce(
@@ -179,18 +173,15 @@ export default function Dashboard() {
       );
       setTotalCompletedNodes(total);
 
-      // ALWAYS calculate Level/XP from real data
       const calculatedLevel = Math.floor(total / 10) + 1;
       setLevel(calculatedLevel);
       setXp(total * 100);
 
-      // Recent Activity
       const sortedHistory = [...fullHistory].sort(
         (a, b) => new Date(b.date) - new Date(a.date),
       );
       setRecentActivity(sortedHistory.slice(0, 5));
 
-      // Radar Chart
       const categories = {
         Frontend: ["React", "HTML", "CSS", "JavaScript", "TypeScript"],
         Backend: ["Node.js", "Python", "Go", "Java", "SQL"],
@@ -219,7 +210,6 @@ export default function Dashboard() {
       });
       setRadarData(radarStats);
 
-      // Contribution Grid
       const today = new Date();
       const gridData = [];
       const dateMap = {};
@@ -252,7 +242,6 @@ export default function Dashboard() {
 
     loadDashboardData();
 
-    // --- REAL-TIME SUBSCRIPTION ---
     if (user) {
       subscriptionRef.current = supabase
         .channel("user_progress_changes")
@@ -281,7 +270,7 @@ export default function Dashboard() {
   }, [user]); // Re-run when auth state changes
 
   // Derived State for UI
-  // We use the variables we calculated in useEffect above, which are derived from the REAL counts.
+
   const displayLevel = level;
   const displayXp = xp;
 
@@ -300,7 +289,6 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background text-foreground py-12">
       <div className="container mx-auto px-4 max-w-6xl">
-        {/* Profile Header */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 bg-card border border-border rounded-xl p-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
@@ -329,7 +317,7 @@ export default function Dashboard() {
                   Next Level: {displayLevel * 10 - totalCompletedNodes} steps
                 </span>
               </div>
-              {/* Username Form */}
+
               {user && (
                 <div className="mt-3">
                   <UsernameForm
@@ -346,7 +334,6 @@ export default function Dashboard() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 relative z-10">
-            {/* Share Profile Button */}
             {user && profile?.username && (
               <Button
                 variant="outline"
@@ -371,9 +358,7 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          {/* Stats Column */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Metrics Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card className="bg-card/50 backdrop-blur-sm">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -425,7 +410,6 @@ export default function Dashboard() {
               </Card>
             </div>
 
-            {/* Activity Grid */}
             <Card className="border-border">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -496,7 +480,6 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            {/* Recent Activity Feed */}
             <Card>
               <CardHeader>
                 <CardTitle>Recent Milestones</CardTitle>
@@ -534,9 +517,7 @@ export default function Dashboard() {
             </Card>
           </div>
 
-          {/* Sidebar Column */}
           <div className="space-y-8">
-            {/* Daily Goal */}
             <DailyGoalCard
               completedToday={
                 recentActivity.filter(
@@ -548,11 +529,10 @@ export default function Dashboard() {
               goal={3}
             />
 
-            {/* Achievements */}
             <AchievementBadges
               stats={{
                 totalCompleted: totalCompletedNodes,
-                streak: totalCompletedNodes > 0 ? 3 : 0, // Mock streak for now
+                streak: totalCompletedNodes > 0 ? 3 : 0,
                 roadmapsStarted: Object.values(progressData).filter(
                   (p) => p.completed > 0,
                 ).length,
@@ -563,7 +543,6 @@ export default function Dashboard() {
               }}
             />
 
-            {/* Skill Radar */}
             <Card className="h-fit">
               <CardHeader>
                 <CardTitle>Skill Distribution</CardTitle>
@@ -608,7 +587,6 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            {/* In Progress List (Compact) */}
             <Card>
               <CardHeader>
                 <CardTitle>Resume Learning</CardTitle>

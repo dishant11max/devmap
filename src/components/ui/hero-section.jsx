@@ -9,7 +9,6 @@ export function HeroSection() {
   const gradientRef = useRef(null);
 
   useEffect(() => {
-    // Animate words
     const words = document.querySelectorAll(".word");
     words.forEach((word) => {
       const delay = parseInt(word.getAttribute("data-delay") || "0", 10);
@@ -18,7 +17,6 @@ export function HeroSection() {
       }, delay);
     });
 
-    // Mouse gradient
     const gradient = gradientRef.current;
     function onMouseMove(e) {
       if (gradient) {
@@ -34,11 +32,8 @@ export function HeroSection() {
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseleave", onMouseLeave);
 
-    // Word hover effects
     words.forEach((word) => {
       word.addEventListener("mouseenter", () => {
-        // Subtle glow effect using CSS variable capable colors would be complex,
-        // sticking to simple opacity change or shadow for simplicity in theme adaptation
         word.style.textShadow = "0 0 20px rgba(var(--primary), 0.5)";
       });
       word.addEventListener("mouseleave", () => {
@@ -46,7 +41,6 @@ export function HeroSection() {
       });
     });
 
-    // Click ripple effect
     function onClick(e) {
       const ripple = document.createElement("div");
       ripple.className = "fixed rounded-full pointer-events-none bg-primary/20";
@@ -61,7 +55,6 @@ export function HeroSection() {
     }
     document.addEventListener("click", onClick);
 
-    // Floating elements on scroll
     let scrolled = false;
     function onScroll() {
       if (!scrolled) {
@@ -190,7 +183,6 @@ export function HeroSection() {
         />
       </svg>
 
-      {/* Corner elements - Using tailwind utility classes for theme adaptability */}
       <div
         className="corner-element absolute top-8 left-8"
         style={{ animationDelay: "4s" }}
@@ -216,7 +208,6 @@ export function HeroSection() {
         <div className="w-2 h-2 opacity-30 bg-foreground"></div>
       </div>
 
-      {/* Floating elements */}
       <div
         className="floating-element bg-foreground"
         style={{ top: "25%", left: "15%", animationDelay: "5s" }}
@@ -235,7 +226,6 @@ export function HeroSection() {
       ></div>
 
       <div className="relative z-10 flex flex-col justify-center items-center px-8 text-center max-w-5xl mx-auto">
-        {/* Top tagline */}
         <div className="mb-8">
           <h2 className="text-xs md:text-sm font-mono font-light uppercase tracking-[0.2em] opacity-80 text-muted-foreground">
             <span className="word" data-delay="0">
@@ -266,7 +256,6 @@ export function HeroSection() {
           <div className="mt-4 w-16 h-px opacity-30 mx-auto bg-gradient-to-r from-transparent via-foreground to-transparent"></div>
         </div>
 
-        {/* Main headline */}
         <div className="mb-12">
           <h1 className="text-3xl md:text-5xl lg:text-7xl font-extralight leading-tight tracking-tight text-foreground">
             <div className="mb-4 md:mb-6">

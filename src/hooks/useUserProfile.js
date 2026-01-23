@@ -11,7 +11,6 @@ export function useUserProfile() {
   useEffect(() => {
     async function loadProfile() {
       if (!user) {
-        // Guest Profile (Mock or from LocalStorage if we tracked global stats there, but we don't really)
         setProfile({
           level: 1,
           total_xp: 0,
@@ -44,18 +43,12 @@ export function useUserProfile() {
     loadProfile();
   }, [user]);
 
-  // Recalculate Stats (triggered when progress changes)
-  // Note: ideally this should be a Database Trigger or Edge Function for security,
-  // but for this MVP, client-side calculation + update is acceptable.
+  // Recalculate Stats
   const updateStats = async (totalNodesCompleted) => {
     if (!user) return;
 
-    // Simple Gamification Logic
     const newXp = totalNodesCompleted * 100;
     const newLevel = Math.floor(totalNodesCompleted / 10) + 1;
-
-    // We could calculate streak here too, but that requires more complex logic.
-    // For now we just update XP and Level.
 
     try {
       const { error } = await supabase
