@@ -9,7 +9,7 @@ export function Footer() {
         </p>
         <div className="flex items-center gap-4">
           <a
-            href="https://github.com/dishant11max"
+            href="https://github.com/dishant11max/devmap"
             target="_blank"
             rel="noreferrer"
             className="text-muted-foreground hover:text-foreground transition-colors"
