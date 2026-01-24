@@ -24,13 +24,13 @@ export function AchievementBadges({ stats }) {
               {earned.map((badge) => (
                 <div
                   key={badge.id}
-                  className="group relative flex items-center justify-center h-12 w-12 rounded-xl bg-primary/10 border border-primary/20 text-2xl cursor-default transition-transform hover:scale-110"
-                  title={`${badge.name}: ${badge.description}`}
+                  className="group relative flex items-center justify-center h-16 w-16 cursor-pointer transition-all hover:scale-110"
                 >
-                  {badge.icon}
+                  <badge.icon className="w-full h-full drop-shadow-lg" />
+
                   {/* Tooltip */}
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-popover border border-border rounded-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
-                    <p className="font-medium">{badge.name}</p>
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-popover border border-border rounded-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-xl backdrop-blur-sm">
+                    <p className="font-bold text-primary">{badge.name}</p>
                     <p className="text-muted-foreground">{badge.description}</p>
                   </div>
                 </div>
@@ -42,21 +42,28 @@ export function AchievementBadges({ stats }) {
         {/* Locked Badges */}
         {locked.length > 0 && (
           <div>
-            <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wider">
-              Locked
+            <p className="text-xs text-muted-foreground mb-3 font-medium uppercase tracking-wider pl-1">
+              Locked Achievements
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-4">
               {locked.map((badge) => (
                 <div
                   key={badge.id}
-                  className="group relative flex items-center justify-center h-12 w-12 rounded-xl bg-secondary/50 border border-border text-2xl grayscale opacity-40 cursor-default"
-                  title={`${badge.name}: ${badge.description}`}
+                  className="group relative flex items-center justify-center h-14 w-14 cursor-not-allowed opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-500"
                 >
-                  {badge.icon}
+                  <badge.icon className="w-full h-full" />
+
                   {/* Tooltip */}
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-popover border border-border rounded-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
-                    <p className="font-medium">{badge.name}</p>
-                    <p className="text-muted-foreground">{badge.description}</p>
+                    <p className="font-medium text-muted-foreground">
+                      {badge.name}
+                    </p>
+                    <p className="text-muted-foreground/50">
+                      {badge.description}
+                    </p>
+                    <p className="text-[10px] text-primary mt-1 font-bold">
+                      LOCKED
+                    </p>
                   </div>
                 </div>
               ))}

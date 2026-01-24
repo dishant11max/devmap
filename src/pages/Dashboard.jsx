@@ -287,35 +287,57 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-background text-foreground py-12">
+    <div className="min-h-screen bg-background text-foreground py-12 bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px]">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 bg-card border border-border rounded-xl p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-
-          <div className="flex items-center gap-6 relative z-10">
-            <div className="relative">
-              <div className="h-24 w-24 rounded-full bg-secondary flex items-center justify-center text-4xl font-bold text-primary ring-4 ring-background shadow-xl">
-                {displayLevel}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 bg-card border border-border rounded-lg p-8">
+          <div className="flex items-center gap-8">
+            {/* Hero Streak */}
+            <div className="flex flex-col items-center">
+              <div className="relative">
+                <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 flex items-center justify-center">
+                  <AnimatedFlame
+                    isActive={totalCompletedNodes > 0}
+                    className="h-8 w-8"
+                  />
+                </div>
+                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg font-black px-3 py-0.5 rounded-full shadow-lg">
+                  {totalCompletedNodes > 0 ? 3 : 0}
+                </div>
               </div>
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                Level
-              </div>
+              <span className="text-xs text-muted-foreground mt-4 uppercase tracking-widest">
+                Day Streak
+              </span>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">
+
+            {/* User Info */}
+            <div className="flex-1">
+              <h1 className="text-2xl font-extrabold tracking-tight">
                 Welcome back,{" "}
                 {user?.user_metadata?.full_name?.split(" ")[0] || "Developer"}
               </h1>
-              <div className="flex items-center gap-3 mt-2 text-muted-foreground">
-                <span className="flex items-center gap-1.5">
-                  <Zap className="h-4 w-4 text-yellow-500" />
-                  {displayXp} XP Earned
+
+              {/* Compact Level & XP */}
+              <div className="flex items-center gap-4 mt-2">
+                <span className="inline-flex items-center gap-1.5 bg-secondary px-3 py-1 rounded-full text-sm font-semibold">
+                  <span className="text-primary">Lv.{displayLevel}</span>
+                  <span className="text-muted-foreground">•</span>
+                  <Zap className="h-3.5 w-3.5 text-yellow-500" />
+                  <span className="text-muted-foreground">{displayXp} XP</span>
                 </span>
-                <span>•</span>
-                <span className="flex items-center gap-1.5">
-                  <Target className="h-4 w-4 text-red-500" />
-                  Next Level: {displayLevel * 10 - totalCompletedNodes} steps
-                </span>
+              </div>
+
+              {/* Progress to next level */}
+              <div className="mt-3 max-w-xs">
+                <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                  <span>Progress to Level {displayLevel + 1}</span>
+                  <span>{totalCompletedNodes % 10}/10 steps</span>
+                </div>
+                <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-primary transition-all"
+                    style={{ width: `${(totalCompletedNodes % 10) * 10}%` }}
+                  />
+                </div>
               </div>
 
               {user && (
@@ -324,7 +346,6 @@ export default function Dashboard() {
                     currentUsername={profile?.username}
                     userId={user.id}
                     onSuccess={(newUsername) => {
-                      // Trigger profile refresh
                       window.location.reload();
                     }}
                   />
@@ -359,55 +380,34 @@ export default function Dashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           <div className="lg:col-span-2 space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="bg-card/50 backdrop-blur-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    Global Rank
-                  </CardTitle>
-                  <Trophy className="h-4 w-4 text-primary" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">Top 5%</div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Based on XP
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-card/50 backdrop-blur-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    Current Streak
-                  </CardTitle>
-                  <AnimatedFlame isActive={totalCompletedNodes > 0} />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">
-                    {totalCompletedNodes > 0 ? "3 Days" : "0 Days"}
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {totalCompletedNodes > 0
-                      ? "You're on fire!"
-                      : "Start learning!"}
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-card/50 backdrop-blur-sm">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    Total Steps
-                  </CardTitle>
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
-                </CardHeader>
-                <CardContent>
+            {/* Quick Stats */}
+            <div className="flex items-center gap-6 p-4 bg-card/50 backdrop-blur-sm rounded-lg border border-border">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <div>
                   <div className="text-2xl font-bold">
                     {totalCompletedNodes}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Nodes mastered
+                  <p className="text-xs text-muted-foreground">
+                    Steps Completed
                   </p>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
+              <div className="h-8 w-px bg-border" />
+              <div className="flex items-center gap-3">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                <div>
+                  <div className="text-2xl font-bold">
+                    {
+                      Object.values(progressData).filter((p) => p.completed > 0)
+                        .length
+                    }
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Roadmaps Started
+                  </p>
+                </div>
+              </div>
             </div>
 
             <Card className="border-border">
@@ -480,41 +480,34 @@ export default function Dashboard() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Milestones</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {recentActivity.length === 0 ? (
-                    <p className="text-muted-foreground text-sm">
-                      No activity yet. Start learning!
-                    </p>
-                  ) : (
-                    recentActivity.map((act, i) => (
-                      <div key={i} className="flex gap-4">
-                        <div className="relative mt-0.5">
-                          <div className="h-2 w-2 rounded-full bg-primary ring-4 ring-primary/20" />
-                          {i !== recentActivity.length - 1 && (
-                            <div className="absolute top-3 left-1 h-full w-px bg-border" />
-                          )}
-                        </div>
-                        <div className="pb-2">
-                          <p className="text-sm font-medium">
-                            Completed step in{" "}
-                            <span className="text-primary">{act.language}</span>
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(act.date).toLocaleDateString()} •{" "}
-                            {new Date(act.date).toLocaleTimeString()}
-                          </p>
-                        </div>
-                      </div>
-                    ))
-                  )}
+            {/* Recent Activity - Compact */}
+            <div className="p-4 bg-card/50 backdrop-blur-sm rounded-lg border border-border">
+              <h3 className="text-sm font-semibold mb-3">Recent Activity</h3>
+              {recentActivity.length === 0 ? (
+                <p className="text-muted-foreground text-sm">
+                  No activity yet. Start learning!
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {recentActivity.slice(0, 3).map((act, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between text-sm"
+                    >
+                      <span>
+                        Completed step in{" "}
+                        <span className="text-primary font-medium">
+                          {act.language}
+                        </span>
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(act.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-              </CardContent>
-            </Card>
+              )}
+            </div>
           </div>
 
           <div className="space-y-8">
