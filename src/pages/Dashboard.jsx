@@ -1,45 +1,22 @@
 import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "../components/ui/Card";
-import {
-  ArrowRight,
-  Trophy,
-  CheckCircle2,
-  Target,
-  Zap,
-  TrendingUp,
-  Share2,
-  Check,
-} from "lucide-react";
+import { Share2, Zap, Target, Trophy, ArrowRight, Check } from "lucide-react";
 import { AchievementBadges } from "../components/dashboard/AchievementBadges";
-import { DailyGoalCard } from "../components/dashboard/DailyGoalCard";
 import { AnimatedFlame } from "../components/dashboard/AnimatedFlame";
-import { UsernameForm } from "../components/dashboard/UsernameForm";
 import { languages } from "../data/languages";
 import { roadmaps } from "../data/roadmaps";
 import { Button } from "../components/ui/Button";
-import { Badge } from "../components/ui/Badge";
 import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
   ResponsiveContainer,
   BarChart,
   Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
   Cell,
+  XAxis,
+  Tooltip,
 } from "recharts";
+import { supabase } from "../lib/supabase";
+import { useUserProfile } from "../hooks/useUserProfile";
 
 const getAllProgress = () => {
   const allProgress = {};
@@ -47,8 +24,6 @@ const getAllProgress = () => {
 
   languages.forEach((lang) => {
     const saved = localStorage.getItem(`devmap_progress_${lang.id}`);
-
-    // Find real total
     let realTotal = lang.steps || 20;
     if (roadmaps[lang.id] && roadmaps[lang.id].nodes) {
       realTotal = roadmaps[lang.id].nodes.length;
@@ -63,15 +38,12 @@ const getAllProgress = () => {
             date: new Date().toISOString(),
           }));
         }
-
         allProgress[lang.id] = {
           completed: completed.length,
           total: realTotal,
           items: completed,
           name: lang.name,
-          category: lang.category || "Languages", // Assuming we add categories later
         };
-
         completed.forEach((item) => {
           history.push({
             date: item.date || new Date().toISOString(),
@@ -83,7 +55,6 @@ const getAllProgress = () => {
         console.error(e);
       }
     } else {
-      // Initialize empty for charts
       allProgress[lang.id] = {
         completed: 0,
         total: realTotal,
@@ -95,9 +66,6 @@ const getAllProgress = () => {
   return { allProgress, history };
 };
 
-import { supabase } from "../lib/supabase";
-import { useUserProfile } from "../hooks/useUserProfile";
-
 export default function Dashboard() {
   const { user } = useAuth();
   const { profile } = useUserProfile();
@@ -106,13 +74,9 @@ export default function Dashboard() {
   const [totalCompletedNodes, setTotalCompletedNodes] = useState(0);
   const [contributionData, setContributionData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
   const [level, setLevel] = useState(1);
   const [xp, setXp] = useState(0);
-
   const [recentActivity, setRecentActivity] = useState([]);
-  const [radarData, setRadarData] = useState([]);
-
   const subscriptionRef = useRef(null);
 
   useEffect(() => {
@@ -129,7 +93,6 @@ export default function Dashboard() {
             .eq("user_id", user.id);
 
           if (!error && data) {
-            // Transform DB rows into the structure Dashboard expects
             languages.forEach((lang) => {
               aggregatedProgress[lang.id] = {
                 completed: 0,
@@ -139,7 +102,6 @@ export default function Dashboard() {
               };
             });
 
-            // Fill it
             data.forEach((row) => {
               if (aggregatedProgress[row.language_slug]) {
                 aggregatedProgress[row.language_slug].completed++;
@@ -147,7 +109,6 @@ export default function Dashboard() {
                   id: row.node_id,
                   date: row.completed_at,
                 });
-
                 fullHistory.push({
                   date: row.completed_at,
                   language: aggregatedProgress[row.language_slug].name,
@@ -172,9 +133,7 @@ export default function Dashboard() {
         0,
       );
       setTotalCompletedNodes(total);
-
-      const calculatedLevel = Math.floor(total / 10) + 1;
-      setLevel(calculatedLevel);
+      setLevel(Math.floor(total / 10) + 1);
       setXp(total * 100);
 
       const sortedHistory = [...fullHistory].sort(
@@ -182,45 +141,16 @@ export default function Dashboard() {
       );
       setRecentActivity(sortedHistory.slice(0, 5));
 
-      const categories = {
-        Frontend: ["React", "HTML", "CSS", "JavaScript", "TypeScript"],
-        Backend: ["Node.js", "Python", "Go", "Java", "SQL"],
-        Tools: ["Git", "Docker", "Linux"],
-        CS: ["Algorithms", "C++", "C"],
-      };
-
-      const radarStats = [
-        { subject: "Frontend", A: 0, fullMark: 100 },
-        { subject: "Backend", A: 0, fullMark: 100 },
-        { subject: "Tools", A: 0, fullMark: 100 },
-        { subject: "CS Theory", A: 0, fullMark: 100 },
-        { subject: "Design", A: 0, fullMark: 100 },
-      ];
-
-      Object.values(aggregatedProgress).forEach((p) => {
-        if (categories.Frontend.includes(p.name))
-          radarStats[0].A += p.completed * 5;
-        else if (categories.Backend.includes(p.name))
-          radarStats[1].A += p.completed * 5;
-        else if (categories.Tools.includes(p.name))
-          radarStats[2].A += p.completed * 5;
-        else if (categories.CS.includes(p.name))
-          radarStats[3].A += p.completed * 5;
-        else radarStats[4].A += p.completed * 5;
-      });
-      setRadarData(radarStats);
-
       const today = new Date();
       const gridData = [];
       const dateMap = {};
-
       fullHistory.forEach((h) => {
         const day = h.date.split("T")[0];
         dateMap[day] = (dateMap[day] || 0) + 1;
       });
 
       const startDate = new Date();
-      startDate.setDate(today.getDate() - 22 * 7);
+      startDate.setDate(today.getDate() - 12 * 7);
 
       for (
         let d = new Date(startDate);
@@ -229,12 +159,7 @@ export default function Dashboard() {
       ) {
         const dayStr = d.toISOString().split("T")[0];
         const count = dateMap[dayStr] || 0;
-        let lvl = 0;
-        if (count > 0) lvl = 1;
-        if (count > 2) lvl = 2;
-        if (count > 4) lvl = 3;
-        if (count > 6) lvl = 4;
-        gridData.push({ date: dayStr, count, level: lvl });
+        gridData.push({ date: dayStr, count });
       }
       setContributionData(gridData);
       setIsLoading(false);
@@ -254,8 +179,6 @@ export default function Dashboard() {
             filter: `user_id=eq.${user.id}`,
           },
           () => {
-            // Reload data when something changes
-            console.log("Real-time update received!");
             loadDashboardData();
           },
         )
@@ -267,242 +190,237 @@ export default function Dashboard() {
         supabase.removeChannel(subscriptionRef.current);
       }
     };
-  }, [user]); // Re-run when auth state changes
+  }, [user]);
 
-  // Derived State for UI
-
+  // Derived data
   const displayLevel = level;
   const displayXp = xp;
 
   const inProgressRoadmaps = [];
-  const completedRoadmaps = [];
   Object.keys(progressData).forEach((key) => {
     const lang = languages.find((l) => l.id === key);
     if (!lang) return;
     const p = progressData[key];
-    if (p.completed > 0) {
-      if (p.completed >= p.total) completedRoadmaps.push(lang);
-      else inProgressRoadmaps.push(lang);
+    if (p.completed > 0 && p.completed < p.total) {
+      inProgressRoadmaps.push(lang);
     }
   });
 
+  const roadmapsStarted = Object.values(progressData).filter(
+    (p) => p.completed > 0,
+  ).length;
+  const badgesEarned = [
+    totalCompletedNodes >= 1,
+    totalCompletedNodes > 0,
+    totalCompletedNodes >= 10,
+    roadmapsStarted >= 3,
+    Object.values(progressData).filter((p) => p.completed >= p.total).length >=
+      1,
+    displayLevel >= 5,
+  ].filter(Boolean).length;
+
+  // Weekly chart data
+  const weeklyData = [];
+  let currentWeek = { date: "", count: 0 };
+  contributionData.forEach((day, i) => {
+    if (i % 7 === 0) {
+      if (i > 0) weeklyData.push(currentWeek);
+      currentWeek = { date: day.date, count: 0 };
+    }
+    currentWeek.count += day.count;
+  });
+  weeklyData.push(currentWeek);
+  const chartData = weeklyData.slice(-12).map((d) => ({
+    ...d,
+    visualValue: d.count === 0 ? 0.2 : d.count,
+    original: d,
+  }));
+
   return (
-    <div className="min-h-screen bg-background text-foreground py-12 bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px]">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 bg-card border border-border rounded-lg p-8">
-          <div className="flex items-center gap-8">
-            {/* Hero Streak */}
-            <div className="flex flex-col items-center">
+    <div className="min-h-screen bg-[#050505] text-zinc-100 py-10 selection:bg-green-500/30">
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-overlay fixed"></div>
+
+      <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        {/* HERO: Streak Section */}
+        <div className="group relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur-md p-8 mb-8 transition-all hover:border-zinc-700 hover:shadow-2xl hover:shadow-green-900/10">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative z-10">
+            <div className="flex items-center gap-8">
               <div className="relative">
-                <div className="h-20 w-20 rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 flex items-center justify-center">
-                  <AnimatedFlame
-                    isActive={totalCompletedNodes > 0}
-                    className="h-8 w-8"
-                  />
-                </div>
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-lg font-black px-3 py-0.5 rounded-full shadow-lg">
-                  {totalCompletedNodes > 0 ? 3 : 0}
+                <div className="flex items-center gap-5">
+                  <div>
+                    <div className="text-7xl font-black tabular-nums tracking-tighter bg-gradient-to-r from-white via-zinc-200 to-zinc-500 bg-clip-text text-transparent">
+                      {totalCompletedNodes > 0 ? 3 : 0}
+                    </div>
+                    <div className="text-xs font-bold uppercase tracking-[0.2em] text-green-500/90 mt-1 pl-1 flex items-center gap-2">
+                      Day Streak
+                    </div>
+                  </div>
                 </div>
               </div>
-              <span className="text-xs text-muted-foreground mt-4 uppercase tracking-widest">
-                Day Streak
-              </span>
             </div>
 
-            {/* User Info */}
-            <div className="flex-1">
-              <h1 className="text-2xl font-extrabold tracking-tight">
-                Welcome back,{" "}
-                {user?.user_metadata?.full_name?.split(" ")[0] || "Developer"}
-              </h1>
+            <div className="flex-1 md:text-right w-full">
+              <div className="flex flex-col md:items-end">
+                <h1 className="text-2xl font-bold text-white tracking-tight">
+                  Welcome back,{" "}
+                  <span className="text-zinc-400">
+                    {user?.user_metadata?.full_name?.split(" ")[0] ||
+                      "Developer"}
+                  </span>
+                </h1>
 
-              {/* Compact Level & XP */}
-              <div className="flex items-center gap-4 mt-2">
-                <span className="inline-flex items-center gap-1.5 bg-secondary px-3 py-1 rounded-full text-sm font-semibold">
-                  <span className="text-primary">Lv.{displayLevel}</span>
-                  <span className="text-muted-foreground">•</span>
-                  <Zap className="h-3.5 w-3.5 text-yellow-500" />
-                  <span className="text-muted-foreground">{displayXp} XP</span>
-                </span>
+                <div className="flex items-center gap-3 mt-3 text-sm font-medium bg-zinc-800/50 p-1.5 pr-4 pl-2 rounded-full border border-white/5 w-fit">
+                  <div className="bg-zinc-900 rounded-full px-2 py-0.5 text-xs text-zinc-400 border border-white/5">
+                    Lv.{displayLevel}
+                  </div>
+                  <div className="flex items-center gap-1.5 text-zinc-300">
+                    <Zap className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
+                    {displayXp.toLocaleString()} XP
+                  </div>
+                </div>
+
+                <div className="mt-4 w-full md:max-w-xs group/progress cursor-pointer">
+                  <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-1.5 group-hover/progress:text-green-400 transition-colors">
+                    <span>Next Level</span>
+                    <span>{totalCompletedNodes % 10}/10</span>
+                  </div>
+                  <div className="h-2 bg-zinc-800 rounded-full overflow-hidden border border-white/5">
+                    <div
+                      className="h-full bg-gradient-to-r from-green-600 to-emerald-400 shadow-[0_0_10px_rgba(34,197,94,0.4)] transition-all duration-1000 ease-out"
+                      style={{ width: `${(totalCompletedNodes % 10) * 10}%` }}
+                    />
+                  </div>
+                </div>
               </div>
-
-              {/* Progress to next level */}
-              <div className="mt-3 max-w-xs">
-                <div className="flex justify-between text-xs text-muted-foreground mb-1">
-                  <span>Progress to Level {displayLevel + 1}</span>
-                  <span>{totalCompletedNodes % 10}/10 steps</span>
-                </div>
-                <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-primary transition-all"
-                    style={{ width: `${(totalCompletedNodes % 10) * 10}%` }}
-                  />
-                </div>
-              </div>
-
-              {user && (
-                <div className="mt-3">
-                  <UsernameForm
-                    currentUsername={profile?.username}
-                    userId={user.id}
-                    onSuccess={(newUsername) => {
-                      window.location.reload();
-                    }}
-                  />
-                </div>
-              )}
             </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3 relative z-10">
-            {user && profile?.username && (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  const url = `${window.location.origin}/u/${profile.username}`;
-                  navigator.clipboard.writeText(url);
-                  alert(`Profile link copied!\n${url}`);
-                }}
-                className="gap-2"
-              >
-                <Share2 className="h-4 w-4" />
-                Share Profile
-              </Button>
-            )}
-            <Button asChild variant="outline">
-              <Link to="/til">Today I Learned</Link>
-            </Button>
-            <Button asChild>
-              <Link to="/languages">Continue Learning</Link>
-            </Button>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          <div className="lg:col-span-2 space-y-8">
-            {/* Quick Stats */}
-            <div className="flex items-center gap-6 p-4 bg-card/50 backdrop-blur-sm rounded-lg border border-border">
-              <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
-                <div>
-                  <div className="text-2xl font-bold">
-                    {totalCompletedNodes}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Steps Completed
-                  </p>
+        {/* Stats Row */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          {[
+            {
+              label: "Steps Completed",
+              value: totalCompletedNodes,
+              icon: Target,
+              delay: "0",
+            },
+            {
+              label: "Roadmaps Active",
+              value: roadmapsStarted,
+              icon: Zap,
+              delay: "100",
+            },
+            {
+              label: "Badges Earned",
+              value: badgesEarned,
+              icon: Trophy,
+              delay: "200",
+            },
+          ].map((stat, i) => (
+            <div
+              key={i}
+              className="group flex items-center justify-between p-5 border border-zinc-800/60 bg-zinc-900/20 backdrop-blur-sm rounded-xl hover:bg-zinc-800/40 hover:border-zinc-700 transition-all duration-300"
+            >
+              <div>
+                <div className="text-3xl font-bold text-zinc-100 group-hover:text-white transition-colors">
+                  {stat.value}
+                </div>
+                <div className="text-xs font-medium text-zinc-500 uppercase tracking-wider mt-1 group-hover:text-zinc-400">
+                  {stat.label}
                 </div>
               </div>
-              <div className="h-8 w-px bg-border" />
-              <div className="flex items-center gap-3">
-                <TrendingUp className="h-5 w-5 text-primary" />
-                <div>
-                  <div className="text-2xl font-bold">
-                    {
-                      Object.values(progressData).filter((p) => p.completed > 0)
-                        .length
-                    }
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Roadmaps Started
-                  </p>
+              <div className="h-10 w-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-600 group-hover:text-green-400 group-hover:border-green-500/30 group-hover:bg-green-500/10 transition-all">
+                <stat.icon className="h-5 w-5" />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Main Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+          {/* Left Column (8 cols) */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* Activity Chart */}
+            <div className="border border-zinc-800/60 bg-zinc-900/20 backdrop-blur-sm rounded-xl p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-widest">
+                  Activity
+                </h2>
+                <div className="text-xs font-mono text-zinc-600 bg-zinc-900/50 px-2 py-1 rounded">
+                  Last 12 Weeks
                 </div>
+              </div>
+
+              <div className="h-48 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData} barSize={24}>
+                    <Tooltip
+                      cursor={{ fill: "transparent" }}
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="bg-zinc-900 border border-zinc-800 p-2 rounded-lg shadow-xl text-xs">
+                              <p className="text-zinc-400 mb-1">
+                                {payload[0].payload.date}
+                              </p>
+                              <p className="font-bold text-green-400">
+                                {payload[0].value} contributions
+                              </p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar dataKey="visualValue" radius={[4, 4, 4, 4]}>
+                      {chartData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={entry.count > 0 ? "#22c55e" : "#27272a"}
+                          className="transition-all duration-300 hover:opacity-80"
+                        />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </div>
 
-            <Card className="border-border">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-primary" />
-                  Learning Activity
-                </CardTitle>
-                <CardDescription>
-                  Your contribution graph over the last year
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="w-full h-40">
-                  {(() => {
-                    const weeklyData = [];
-                    let currentWeek = { date: "", count: 0 };
-                    contributionData.forEach((day, i) => {
-                      if (i % 7 === 0) {
-                        if (i > 0) weeklyData.push(currentWeek);
-                        currentWeek = { date: day.date, count: 0 };
-                      }
-                      currentWeek.count += day.count;
-                    });
-                    weeklyData.push(currentWeek);
-
-                    const chartData = weeklyData.map((d) => ({
-                      ...d,
-                      visualValue: d.count === 0 ? 0.3 : d.count,
-                    }));
-
-                    return (
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={chartData} barSize={12}>
-                          <Tooltip
-                            cursor={{ fill: "transparent" }}
-                            content={({ active, payload }) => {
-                              if (active && payload && payload.length) {
-                                const data = payload[0].payload;
-                                return (
-                                  <div className="bg-zinc-900 border border-zinc-800 p-2 rounded-lg text-xs">
-                                    <p className="font-bold mb-1">
-                                      {data.date}
-                                    </p>
-                                    <p>{data.count} contributions</p>
-                                  </div>
-                                );
-                              }
-                              return null;
-                            }}
-                          />
-                          <Bar dataKey="visualValue" radius={[4, 4, 4, 4]}>
-                            {chartData.map((entry, index) => (
-                              <Cell
-                                key={`cell-${index}`}
-                                fill={entry.count > 0 ? "#22c55e" : "#27272a"}
-                                stroke={entry.count === 0 ? "#3f3f46" : "none"}
-                                strokeWidth={1}
-                              />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    );
-                  })()}
-                  <div className="text-xs text-center text-muted-foreground mt-2">
-                    Activity over last 20 weeks
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Activity - Compact */}
-            <div className="p-4 bg-card/50 backdrop-blur-sm rounded-lg border border-border">
-              <h3 className="text-sm font-semibold mb-3">Recent Activity</h3>
+            {/* Recent Activity */}
+            <div className="space-y-4">
+              <h2 className="text-sm font-bold text-zinc-500 uppercase tracking-widest pl-2">
+                Recent
+              </h2>
               {recentActivity.length === 0 ? (
-                <p className="text-muted-foreground text-sm">
-                  No activity yet. Start learning!
-                </p>
+                <div className="p-8 border border-dashed border-zinc-800 rounded-xl text-center text-zinc-600">
+                  No activity yet. Time to start coding!
+                </div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {recentActivity.slice(0, 3).map((act, i) => (
                     <div
                       key={i}
-                      className="flex items-center justify-between text-sm"
+                      className="group flex items-center justify-between p-4 bg-zinc-900/30 border border-zinc-800/60 rounded-xl hover:border-zinc-700 hover:bg-zinc-900/60 transition-all"
                     >
-                      <span>
-                        Completed step in{" "}
-                        <span className="text-primary font-medium">
-                          {act.language}
-                        </span>
-                      </span>
-                      <span className="text-xs text-muted-foreground">
+                      <div className="flex items-center gap-4">
+                        <div className="h-8 w-8 rounded-full bg-green-900/20 border border-green-500/20 flex items-center justify-center text-green-500">
+                          <Check className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium text-zinc-300 group-hover:text-white transition-colors">
+                            {act.language}
+                          </div>
+                          <div className="text-xs text-zinc-600">
+                            Completed a step
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-xs font-mono text-zinc-500">
                         {new Date(act.date).toLocaleDateString()}
-                      </span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -510,112 +428,119 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="space-y-8">
-            <DailyGoalCard
-              completedToday={
-                recentActivity.filter(
-                  (a) =>
-                    new Date(a.date).toDateString() ===
-                    new Date().toDateString(),
-                ).length
-              }
-              goal={3}
-            />
+          {/* Right Column (4 cols) */}
+          <div className="lg:col-span-5 space-y-8">
+            {/* Continue Learning */}
+            <div className="border border-zinc-800/60 bg-zinc-900/20 backdrop-blur-sm rounded-xl p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-widest">
+                  Jump Back In
+                </h2>
+                <Link
+                  to="/languages"
+                  className="text-xs text-green-500 hover:text-green-400 font-medium"
+                >
+                  View All
+                </Link>
+              </div>
 
-            <AchievementBadges
-              stats={{
-                totalCompleted: totalCompletedNodes,
-                streak: totalCompletedNodes > 0 ? 3 : 0,
-                roadmapsStarted: Object.values(progressData).filter(
-                  (p) => p.completed > 0,
-                ).length,
-                roadmapsCompleted: Object.values(progressData).filter(
-                  (p) => p.completed >= p.total,
-                ).length,
-                level: displayLevel,
-              }}
-            />
-
-            <Card className="h-fit">
-              <CardHeader>
-                <CardTitle>Skill Distribution</CardTitle>
-                <CardDescription>Your strengths at a glance</CardDescription>
-              </CardHeader>
-              <CardContent className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart
-                    cx="50%"
-                    cy="50%"
-                    outerRadius="80%"
-                    data={radarData}
+              {inProgressRoadmaps.length === 0 ? (
+                <div className="text-center py-6">
+                  <p className="text-sm text-zinc-500 mb-4">
+                    No active roadmaps
+                  </p>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
                   >
-                    <PolarGrid stroke="#27272a" />
-                    <PolarAngleAxis
-                      dataKey="subject"
-                      tick={{ fill: "#71717a", fontSize: 12 }}
-                    />
-                    <PolarRadiusAxis
-                      angle={30}
-                      domain={[0, 50]}
-                      tick={false}
-                      axisLine={false}
-                    />
-                    <Radar
-                      name="Skills"
-                      dataKey="A"
-                      stroke="#22c55e"
-                      fill="#22c55e"
-                      fillOpacity={0.3}
-                    />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#18181b",
-                        borderColor: "#27272a",
-                        borderRadius: "8px",
-                      }}
-                      itemStyle={{ color: "#22c55e" }}
-                    />
-                  </RadarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Resume Learning</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {inProgressRoadmaps.length === 0 ? (
-                  <div className="text-sm text-muted-foreground">
-                    No active courses.
-                  </div>
-                ) : (
-                  inProgressRoadmaps.slice(0, 3).map((lang) => {
+                    <Link to="/languages">Browse Library</Link>
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {inProgressRoadmaps.slice(0, 3).map((lang) => {
                     const p = progressData[lang.id];
                     const percent = Math.round((p.completed / p.total) * 100);
                     return (
-                      <div key={lang.id} className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="font-medium">{lang.name}</span>
-                          <span className="text-muted-foreground">
+                      <Link
+                        key={lang.id}
+                        to={`/roadmap/${lang.id}`}
+                        className="block group"
+                      >
+                        <div className="flex justify-between text-xs font-medium mb-2">
+                          <span className="text-zinc-300 group-hover:text-white transition-colors">
+                            {lang.name}
+                          </span>
+                          <span className="text-zinc-500 group-hover:text-green-400">
                             {percent}%
                           </span>
                         </div>
-                        <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-primary"
+                            className="h-full bg-zinc-600 group-hover:bg-green-500 transition-colors duration-300"
                             style={{ width: `${percent}%` }}
                           />
                         </div>
-                      </div>
+                      </Link>
                     );
-                  })
-                )}
-                <Button asChild variant="ghost" className="w-full text-xs h-8">
-                  <Link to="/languages">View All Languages</Link>
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Badges */}
+            <div className="border border-zinc-800/60 bg-zinc-900/20 backdrop-blur-sm rounded-xl p-6">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-widest">
+                  Achievements
+                </h2>
+              </div>
+              <AchievementBadges
+                stats={{
+                  totalCompleted: totalCompletedNodes,
+                  streak: totalCompletedNodes > 0 ? 3 : 0,
+                  roadmapsStarted: roadmapsStarted,
+                  roadmapsCompleted: Object.values(progressData).filter(
+                    (p) => p.completed >= p.total,
+                  ).length,
+                  level: displayLevel,
+                }}
+              />
+            </div>
+
+            {/* Quick Actions */}
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                asChild
+                variant="outline"
+                className="h-12 border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 hover:text-white hover:border-zinc-700"
+              >
+                <Link to="/til">
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-yellow-500" />
+                    <span>TIL</span>
+                  </div>
+                </Link>
+              </Button>
+              {user && profile?.username && (
+                <Button
+                  variant="outline"
+                  className="h-12 border-zinc-800 bg-zinc-900/50 hover:bg-zinc-800 hover:text-white hover:border-zinc-700"
+                  onClick={() => {
+                    const url = `${window.location.origin}/u/${profile.username}`;
+                    navigator.clipboard.writeText(url);
+                    alert(`Profile link copied!\n${url}`);
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <Share2 className="h-4 w-4 text-blue-500" />
+                    <span>Share</span>
+                  </div>
                 </Button>
-              </CardContent>
-            </Card>
+              )}
+            </div>
           </div>
         </div>
       </div>
