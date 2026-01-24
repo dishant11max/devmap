@@ -9,24 +9,24 @@ const NodeCard = ({ data, selected }) => {
   return (
     <div
       className={cn(
-        "relative min-w-[200px] rounded-lg border-2 bg-card p-4 shadow-sm transition-all hover:shadow-md",
-        selected ? "border-primary ring-2 ring-primary/20" : "border-border",
-        isCompleted
-          ? "border-green-500/50 bg-green-500/5 dark:bg-green-500/10"
-          : ""
+        "relative min-w-[200px] rounded-xl border-2 bg-zinc-900 p-4 shadow-lg transition-all hover:shadow-xl",
+        selected
+          ? "border-white ring-2 ring-white/20"
+          : "border-zinc-700 hover:border-zinc-500",
+        isCompleted ? "border-white/50 bg-zinc-800" : "",
       )}
     >
       <Handle
         type="target"
         position={Position.Top}
-        className="!bg-muted-foreground"
+        className="!bg-zinc-500 !border-zinc-400 !w-2 !h-2"
       />
 
       <div className="flex items-start gap-3">
         <div
           className={cn(
             "mt-0.5 transition-colors",
-            isCompleted ? "text-green-500" : "text-muted-foreground"
+            isCompleted ? "text-white" : "text-zinc-500",
           )}
         >
           {isCompleted ? (
@@ -36,16 +36,23 @@ const NodeCard = ({ data, selected }) => {
           )}
         </div>
         <div>
-          <h3 className="font-semibold leading-tight">{data.title}</h3>
-          <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+          <h3
+            className={cn(
+              "font-semibold leading-tight",
+              isCompleted ? "text-white" : "text-zinc-200",
+            )}
+          >
+            {data.title}
+          </h3>
+          <p className="mt-1 text-xs text-zinc-500 line-clamp-2">
             {data.description}
           </p>
         </div>
       </div>
 
       {data.time && (
-        <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="rounded-full bg-secondary px-2 py-0.5">
+        <div className="mt-3 flex items-center gap-2 text-xs text-zinc-500">
+          <span className="rounded-md bg-zinc-800 border border-zinc-700 px-2 py-0.5 text-[10px] font-medium">
             {data.time}
           </span>
         </div>
@@ -54,7 +61,7 @@ const NodeCard = ({ data, selected }) => {
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!bg-muted-foreground"
+        className="!bg-zinc-500 !border-zinc-400 !w-2 !h-2"
       />
     </div>
   );

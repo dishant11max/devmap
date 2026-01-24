@@ -1,11 +1,4 @@
 import { ExternalLink, Youtube, BookOpen, PenTool } from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "../components/ui/Card";
 
 const resources = [
   {
@@ -50,7 +43,7 @@ const resources = [
     ],
   },
   {
-    category: "Documentation & references",
+    category: "Documentation & References",
     icon: BookOpen,
     items: [
       {
@@ -95,47 +88,56 @@ const resources = [
 
 export default function Resources() {
   return (
-    <div className="container max-w-5xl py-12 mx-auto">
-      <div className="mb-12 text-center">
-        <h1 className="text-4xl font-bold tracking-tight">Curated Resources</h1>
-        <p className="text-muted-foreground mt-4 text-lg">
-          The best free learning material from around the web.
-        </p>
-      </div>
+    <div className="min-h-screen bg-[#050505] text-zinc-100 py-16 relative">
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-overlay fixed"></div>
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {resources.map((section) => (
-          <Card key={section.category} className="flex flex-col">
-            <CardHeader>
-              <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                <section.icon className="h-5 w-5 text-primary" />
+      <div className="container max-w-5xl mx-auto px-4 relative z-10">
+        <div className="mb-16 text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-white">
+            Curated Resources
+          </h1>
+          <p className="text-zinc-400 mt-4 text-lg max-w-xl mx-auto">
+            The best free learning material from around the web.
+          </p>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {resources.map((section) => (
+            <div
+              key={section.category}
+              className="flex flex-col border border-zinc-800 bg-zinc-900/40 backdrop-blur-sm rounded-2xl p-6 hover:border-zinc-600 transition-all"
+            >
+              <div className="mb-5">
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-800 border border-zinc-700">
+                  <section.icon className="h-5 w-5 text-zinc-300" />
+                </div>
+                <h2 className="text-xl font-bold text-white">
+                  {section.category}
+                </h2>
               </div>
-              <CardTitle className="text-xl">{section.category}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <ul className="space-y-4">
+              <ul className="space-y-3 flex-1">
                 {section.items.map((item) => (
                   <li key={item.title}>
                     <a
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group block rounded-md border p-3 transition-colors hover:bg-accent hover:border-accent-foreground/50"
+                      className="group block rounded-lg border border-zinc-800 bg-zinc-900/50 p-3 transition-all hover:bg-zinc-800 hover:border-zinc-600"
                     >
-                      <div className="flex items-center justify-between font-medium group-hover:text-accent-foreground">
+                      <div className="flex items-center justify-between font-medium text-zinc-200 group-hover:text-white">
                         {item.title}
-                        <ExternalLink className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
+                        <ExternalLink className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100 text-zinc-400" />
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="text-xs text-zinc-500 mt-1 group-hover:text-zinc-400">
                         {item.description}
                       </p>
                     </a>
                   </li>
                 ))}
               </ul>
-            </CardContent>
-          </Card>
-        ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
