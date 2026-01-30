@@ -6,6 +6,8 @@ import { c } from "./c";
 import { go } from "./go";
 import { rust } from "./rust";
 import { typescript } from "./typescript";
+import { html } from "./html";
+import { css } from "./css";
 
 export const roadmaps = {
   javascript,
@@ -16,4 +18,6 @@ export const roadmaps = {
   go,
   rust,
   typescript,
+  html,
+  css,
 };

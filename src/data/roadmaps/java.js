@@ -14,8 +14,8 @@ export const java = {
         resources: [
           {
             type: "video",
-            title: "Java Full Course (Bro Code)",
-            url: "https://www.youtube.com/watch?v=xk4_1vDrixo",
+            title: "Java Full Course (freeCodeCamp)",
+            url: "https://www.youtube.com/watch?v=A74TOX803D0",
           },
           {
             type: "doc",
@@ -56,8 +56,8 @@ export const java = {
         resources: [
           {
             type: "video",
-            title: "Java OOP Basics",
-            url: "https://www.youtube.com/watch?v=sJN5f8q_670",
+            title: "Java OOP - Programming with Mosh",
+            url: "https://www.youtube.com/watch?v=pTB0EiLXUC8",
           },
         ],
       },

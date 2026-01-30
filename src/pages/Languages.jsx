@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Search, Code2, Clock, BookOpen } from "lucide-react";
 import { languages } from "../data/languages";
 import { roadmaps } from "../data/roadmaps";
 import { Input } from "../components/ui/Input";
-import { Button } from "../components/ui/Button";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
 
@@ -16,6 +15,8 @@ export default function Languages() {
 
   // Fetch progress data
   useEffect(() => {
+    let mounted = true;
+
     async function loadProgress() {
       const newProgressMap = {};
 
@@ -53,25 +54,37 @@ export default function Languages() {
           }
         });
       }
-      setProgressMap(newProgressMap);
+
+      if (mounted) {
+        setProgressMap(newProgressMap);
+      }
     }
 
     loadProgress();
+
+    return () => {
+      mounted = false;
+    };
   }, [user]);
 
-  const categories = ["All", ...new Set(languages.map((l) => l.category))];
+  const categories = useMemo(
+    () => ["All", ...new Set(languages.map((l) => l.category))],
+    [],
+  );
 
-  const filteredLanguages = languages.filter((lang) => {
-    const matchesSearch = lang.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "All" || lang.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredLanguages = useMemo(() => {
+    return languages.filter((lang) => {
+      const matchesSearch = lang.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
+      const matchesCategory =
+        selectedCategory === "All" || lang.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [search, selectedCategory]);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-zinc-100 py-12">
+    <div className="min-h-screen bg-[#050505] text-zinc-100 py-12 relative overflow-hidden">
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-overlay fixed"></div>
 
       <div className="container mx-auto px-4 max-w-6xl relative z-10">

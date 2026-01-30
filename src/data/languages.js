@@ -93,4 +93,28 @@ export const languages = [
     estimatedTime: "3-4 Weeks",
     popular: true,
   },
+  {
+    id: "html",
+    name: "HTML",
+    abbreviation: "Ht",
+    description:
+      "The standard markup language for documents designed to be displayed in a web browser.",
+    category: "Web",
+    difficulty: "Beginner",
+    steps: 5,
+    estimatedTime: "1-2 Weeks",
+    popular: true,
+  },
+  {
+    id: "css",
+    name: "CSS",
+    abbreviation: "Cs",
+    description:
+      "Style sheet language used for describing the presentation of a document written in HTML.",
+    category: "Web",
+    difficulty: "Beginner",
+    steps: 5,
+    estimatedTime: "3-4 Weeks",
+    popular: true,
+  },
 ];

@@ -38,8 +38,8 @@ export const javascript = {
         resources: [
           {
             type: "video",
-            title: "JavaScript Variables - The Net Ninja",
-            url: "https://www.youtube.com/watch?v=0sQZd8aTqM8",
+            title: "JavaScript Let vs Var vs Constant (Mosh)",
+            url: "https://www.youtube.com/watch?v=XgSjoHgy3Rk",
           },
         ],
       },
