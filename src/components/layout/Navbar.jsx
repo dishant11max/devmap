@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Component, Map, Menu, X, LogIn, LogOut, User } from "lucide-react";
-import { ThemeToggle } from "../ui/ThemeToggle";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 import { Button } from "../ui/Button";
@@ -64,8 +64,6 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <ThemeToggle />
-
           {/* Auth Button (Desktop) */}
           <div className="hidden md:block">
             {user ? (
