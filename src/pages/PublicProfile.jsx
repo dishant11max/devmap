@@ -187,7 +187,7 @@ export default function PublicProfile() {
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-3">
           <div className="border border-zinc-800 rounded-xl p-5 bg-zinc-900/40 text-center">
             <div className="text-3xl font-bold text-zinc-100">
               {xp.toLocaleString()}
