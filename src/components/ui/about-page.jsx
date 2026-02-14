@@ -21,7 +21,7 @@ export default function AboutPage() {
             </h1>
             <p className="text-lg text-zinc-400 leading-relaxed max-w-2xl mx-auto">
               DevMap is evolving to be more than just a list of links. It
-              supports an entire ecosystem — from structured learning paths to
+              supports an entire ecosystem,from structured learning paths to
               curated resources helping developers master new skills.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
