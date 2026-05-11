@@ -118,10 +118,10 @@ export default function PublicProfile() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+      <div className="min-h-screen bg-[#08090A] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4" />
-          <p className="text-zinc-500">Loading profile...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4" />
+          <p className="text-[#555]">Loading profile...</p>
         </div>
       </div>
     );
@@ -129,16 +129,16 @@ export default function PublicProfile() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#050505] flex items-center justify-center">
+      <div className="min-h-screen bg-[#08090A] flex items-center justify-center">
         <div className="text-center">
-          <User className="h-16 w-16 text-zinc-700 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-zinc-100 mb-2">
+          <User className="h-16 w-16 text-[rgba(255,255,255,0.12)] mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-white mb-2">
             Profile Not Found
           </h1>
-          <p className="text-zinc-500 mb-4">
+          <p className="text-[#555] mb-4">
             The user @{username} doesn't exist or hasn't set up their profile.
           </p>
-          <Button asChild className="bg-green-600 hover:bg-green-700">
+          <Button asChild className="bg-white hover:bg-white">
             <Link to="/">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Go Home
@@ -153,12 +153,12 @@ export default function PublicProfile() {
     Object.keys(languages).length > 0 ? Math.floor(totalCompleted / 5) || 0 : 0;
 
   return (
-    <div className="min-h-screen bg-[#050505] text-zinc-100 py-10">
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-overlay fixed"></div>
+    <div className="min-h-screen bg-[#08090A] text-white py-10">
+      
 
       <div className="container mx-auto px-4 max-w-4xl relative z-10">
         {/* Profile Header */}
-        <div className="relative overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/40 backdrop-blur-md p-8 mb-8">
+        <div className="relative overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[#111213]/40 backdrop-blur-md p-8 mb-8">
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
             <div className="relative mb-4">
@@ -166,14 +166,14 @@ export default function PublicProfile() {
                 <img
                   src={profile.avatar_url}
                   alt={profile.full_name}
-                  className="h-24 w-24 rounded-full border-4 border-zinc-800 shadow-xl"
+                  className="h-24 w-24 rounded-full border-4 border-[rgba(255,255,255,0.06)] shadow-xl"
                 />
               ) : (
-                <div className="h-24 w-24 rounded-full bg-zinc-800 flex items-center justify-center text-4xl font-bold text-zinc-400 border-4 border-zinc-700 shadow-xl">
+                <div className="h-24 w-24 rounded-full bg-[rgba(255,255,255,0.06)] flex items-center justify-center text-4xl font-bold text-[#888] border-4 border-[rgba(255,255,255,0.12)] shadow-xl">
                   {profile.full_name?.[0] || "?"}
                 </div>
               )}
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white text-white text-xs font-bold px-3 py-1 rounded-full">
                 Level {level}
               </div>
             </div>
@@ -182,42 +182,42 @@ export default function PublicProfile() {
             <h1 className="text-3xl font-bold text-white tracking-tight">
               {profile.full_name || "Developer"}
             </h1>
-            <p className="text-zinc-500">@{profile.username}</p>
+            <p className="text-[#555]">@{profile.username}</p>
           </div>
         </div>
 
         {/* Stats Row */}
         <div className="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-3">
-          <div className="border border-zinc-800 rounded-xl p-5 bg-zinc-900/40 text-center">
-            <div className="text-3xl font-bold text-zinc-100">
+          <div className="border border-[rgba(255,255,255,0.06)] rounded-xl p-5 bg-[#111213]/40 text-center">
+            <div className="text-3xl font-bold text-white">
               {xp.toLocaleString()}
             </div>
-            <div className="text-xs text-zinc-500 mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
+            <div className="text-xs text-[#555] mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
               <Zap className="h-3 w-3 text-yellow-500" />
               XP Earned
             </div>
           </div>
-          <div className="border border-zinc-800 rounded-xl p-5 bg-zinc-900/40 text-center">
-            <div className="text-3xl font-bold text-zinc-100">
+          <div className="border border-[rgba(255,255,255,0.06)] rounded-xl p-5 bg-[#111213]/40 text-center">
+            <div className="text-3xl font-bold text-white">
               {totalCompleted}
             </div>
-            <div className="text-xs text-zinc-500 mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
-              <Target className="h-3 w-3 text-green-500" />
+            <div className="text-xs text-[#555] mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
+              <Target className="h-3 w-3 text-white" />
               Steps
             </div>
           </div>
-          <div className="border border-zinc-800 rounded-xl p-5 bg-zinc-900/40 text-center">
-            <div className="text-3xl font-bold text-zinc-100">{level}</div>
-            <div className="text-xs text-zinc-500 mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
-              <Trophy className="h-3 w-3 text-amber-500" />
+          <div className="border border-[rgba(255,255,255,0.06)] rounded-xl p-5 bg-[#111213]/40 text-center">
+            <div className="text-3xl font-bold text-white">{level}</div>
+            <div className="text-xs text-[#555] mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
+              <Trophy className="h-3 w-3 text-white" />
               Level
             </div>
           </div>
         </div>
 
         {/* Skill Radar */}
-        <div className="border border-zinc-800 rounded-2xl bg-zinc-900/40 backdrop-blur-md p-6 mb-8">
-          <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-widest mb-6">
+        <div className="border border-[rgba(255,255,255,0.06)] rounded-2xl bg-[#111213]/40 backdrop-blur-md p-6 mb-8">
+          <h2 className="text-sm font-bold text-[#888] uppercase tracking-widest mb-6">
             Skill Distribution
           </h2>
           <div className="h-[300px]">
@@ -256,10 +256,10 @@ export default function PublicProfile() {
 
         {/* Footer */}
         <div className="text-center">
-          <p className="text-sm text-zinc-600 mb-4">
+          <p className="text-sm text-[#555] mb-4">
             Want your own DevMap profile?
           </p>
-          <Button asChild className="bg-green-600 hover:bg-green-700">
+          <Button asChild className="bg-white hover:bg-white">
             <Link to="/">Get Started</Link>
           </Button>
         </div>

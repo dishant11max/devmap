@@ -23,6 +23,7 @@ export function Navbar() {
 
   const navLinks = [
     { to: "/languages", label: "Languages" },
+    { to: "/cs-core", label: "CS Core" },
     { to: "/til", label: "TIL" },
     { to: "/resources", label: "Resources" },
     { to: "/dashboard", label: "Dashboard" },
@@ -54,7 +55,7 @@ export function Navbar() {
               to={link.to}
               className={({ isActive }) =>
                 isActive
-                  ? "text-sm font-medium text-primary"
+                  ? "relative text-sm font-semibold text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:bg-white after:rounded-full"
                   : "text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
               }
             >
@@ -64,6 +65,12 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-4">
+          {/* Cmd+K Hint */}
+          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md border border-[rgba(255,255,255,0.06)] bg-[#111213] text-[#555] select-none hover:border-[rgba(255,255,255,0.12)] hover:text-[#888] transition-colors cursor-pointer" onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}>
+            <span className="text-xs">Search...</span>
+            <kbd className="text-[10px] font-mono border border-[rgba(255,255,255,0.1)] rounded px-1.5 py-0.5">⌘K</kbd>
+          </div>
+
           {/* Auth Button (Desktop) */}
           <div className="hidden md:block">
             {user ? (

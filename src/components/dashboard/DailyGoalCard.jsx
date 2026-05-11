@@ -14,7 +14,7 @@ export function DailyGoalCard({ completedToday = 0, goal = 3 }) {
   const strokeDashoffset = circumference - progress * circumference;
 
   return (
-    <Card className={isComplete ? "border-green-500/50 bg-green-500/5" : ""}>
+    <Card className={isComplete ? "border-white/50 bg-white" : ""}>
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base">
           <Target className="h-4 w-4 text-primary" />
@@ -48,14 +48,14 @@ export function DailyGoalCard({ completedToday = 0, goal = 3 }) {
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 className={`transition-all duration-500 ${
-                  isComplete ? "text-green-500" : "text-primary"
+                  isComplete ? "text-white" : "text-primary"
                 }`}
               />
             </svg>
             {/* Center text */}
             <div className="absolute inset-0 flex items-center justify-center">
               {isComplete ? (
-                <CheckCircle2 className="h-6 w-6 text-green-500" />
+                <CheckCircle2 className="h-6 w-6 text-white" />
               ) : (
                 <span className="text-lg font-bold">{percentage}%</span>
               )}

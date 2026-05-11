@@ -43,68 +43,75 @@ export default function TIL() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-zinc-100 py-16 relative selection:bg-white/20">
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-overlay fixed"></div>
+    <div className="min-h-screen bg-[#08090A] text-white py-16 relative">
 
       <div className="container mx-auto px-4 max-w-5xl relative z-10">
         {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-zinc-800 pb-8">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <BookOpen className="h-6 w-6 text-white" />
-              <h1 className="text-3xl font-bold tracking-tight text-white">
-                Today I Learned
-              </h1>
+        <div className="mb-12 border-b border-[rgba(255,255,255,0.06)] pb-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <BookOpen className="h-6 w-6 text-white" />
+                <h1 className="text-3xl font-bold tracking-tight text-white">
+                  Today I Learned
+                </h1>
+              </div>
+              <p className="text-[#555] max-w-xl">
+                Small snippets of knowledge, verified facts, and code tricks.
+              </p>
             </div>
-            <p className="text-zinc-500 max-w-xl">
-              Small snippets of knowledge, verified facts, and code tricks.
-            </p>
           </div>
-
-          <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-zinc-500" />
-              <Input
-                type="text"
-                placeholder="Search snippets..."
-                className="pl-10 h-10 bg-zinc-900/50 border-zinc-800 text-zinc-200 focus:border-white/20 focus:bg-zinc-900 transition-all rounded-lg placeholder:text-zinc-600"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
+          {/* Prominent search bar — full width below title */}
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#555]" />
+            <Input
+              type="text"
+              placeholder="Search snippets... (try 'React', 'SQL', 'Git')"
+              className="pl-11 h-12 w-full bg-[#111213] border-[rgba(255,255,255,0.06)] text-white focus:border-[rgba(255,255,255,0.12)] focus:bg-[#1A1A1A] transition-all rounded-xl placeholder:text-[#555] text-sm"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#555] hover:text-white transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
 
         {/* Daily Spotlight Section */}
         {dailyTip && !search && selectedTag === "All" && (
           <div className="mb-12">
-            <div className="flex items-center gap-2 mb-4 text-zinc-400 font-bold tracking-wide text-xs uppercase pl-1">
+            <div className="flex items-center gap-2 mb-4 text-[#888] font-bold tracking-wide text-xs uppercase pl-1">
               <Lightbulb className="h-3.5 w-3.5 text-white" />
               <span>Daily Spotlight</span>
             </div>
             <div
               onClick={() => setSelectedEntry(dailyTip)}
-              className="cursor-pointer group relative overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/40 backdrop-blur-sm p-8 transition-all hover:border-zinc-500 hover:shadow-2xl hover:shadow-black/50"
+              className="cursor-pointer group relative overflow-hidden rounded-xl border border-[rgba(255,255,255,0.06)] bg-[#111213]/40 backdrop-blur-sm p-8 transition-all hover:border-[#555] hover:shadow-2xl hover:shadow-black/50"
             >
               <div className="relative z-10">
-                <div className="mb-3 flex items-center gap-2 text-xs font-mono text-zinc-500">
-                  <span className="text-zinc-400">{dailyTip.date}</span>
+                <div className="mb-3 flex items-center gap-2 text-xs font-mono text-[#555]">
+                  <span className="text-[#888]">{dailyTip.date}</span>
                   <span>•</span>
                   <span className="uppercase tracking-wider">
                     {dailyTip.category}
                   </span>
                 </div>
-                <h2 className="text-2xl font-bold mb-3 text-zinc-100 group-hover:text-white transition-colors">
+                <h2 className="text-2xl font-bold mb-3 text-white group-hover:text-white transition-colors">
                   {dailyTip.title}
                 </h2>
-                <p className="text-zinc-400 line-clamp-2 max-w-3xl leading-relaxed group-hover:text-zinc-300">
+                <p className="text-[#888] line-clamp-2 max-w-3xl leading-relaxed group-hover:text-white">
                   {dailyTip.content}
                 </p>
                 <div className="mt-6 flex gap-2">
                   {dailyTip.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-[10px] uppercase tracking-wider font-semibold bg-zinc-950 border border-zinc-800 px-2.5 py-1 rounded text-zinc-400 group-hover:border-zinc-700 group-hover:text-zinc-300 transition-colors"
+                      className="text-[10px] uppercase tracking-wider font-semibold bg-[#08090A] border border-[rgba(255,255,255,0.06)] px-2.5 py-1 rounded text-[#888] group-hover:border-[rgba(255,255,255,0.12)] group-hover:text-white transition-colors"
                     >
                       {tag}
                     </span>
@@ -123,8 +130,8 @@ export default function TIL() {
               onClick={() => setSelectedTag(tag)}
               className={`px-3 py-1.5 text-xs font-medium rounded-full transition-all border ${
                 selectedTag === tag
-                  ? "bg-zinc-100 border-zinc-100 text-black"
-                  : "bg-transparent border-zinc-800 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300"
+                  ? "bg-white border-white text-black font-bold"
+                  : "bg-transparent border-[rgba(255,255,255,0.06)] text-[#555] hover:border-[rgba(255,255,255,0.12)] hover:text-white"
               }`}
             >
               {tag}
@@ -134,46 +141,63 @@ export default function TIL() {
 
         {/* Masonry-ish Grid */}
         {filteredEntries.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
-            {filteredEntries.map((entry) => (
-              <div
-                key={entry.id}
-                onClick={() => setSelectedEntry(entry)}
-                className="group cursor-pointer flex flex-col justify-between border border-zinc-800 bg-zinc-900/20 backdrop-blur-sm rounded-xl p-6 transition-all hover:border-zinc-600 hover:bg-zinc-900/60 hover:-translate-y-1"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-[10px] font-mono text-zinc-600 uppercase">
-                      {entry.date}
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-medium text-zinc-400 uppercase">
-                      {entry.category}
-                    </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredEntries.map((entry, idx) => {
+              const isFeatured = idx === 0 && filteredEntries.length > 1;
+              const isBreakPoint = idx > 0 && idx % 12 === 0;
+              return (
+                <>
+                  {isBreakPoint && (
+                    <div key={`break-${idx}`} className="lg:col-span-3 md:col-span-2 col-span-1 flex items-center gap-4 py-4">
+                      <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+                      <span className="text-xs font-mono text-[#555] uppercase tracking-widest px-3">
+                        {idx} snippets — keep going
+                      </span>
+                      <div className="flex-1 h-px bg-[rgba(255,255,255,0.06)]" />
+                    </div>
+                  )}
+                  <div
+                    key={entry.id}
+                    onClick={() => setSelectedEntry(entry)}
+                    className={`group cursor-pointer flex flex-col justify-between border border-[rgba(255,255,255,0.06)] bg-[#111213]/20 backdrop-blur-sm rounded-2xl p-6 transition-all hover:border-[#555] hover:bg-[#111213]/60 hover:-translate-y-1 ${
+                      isFeatured ? "lg:col-span-2" : ""
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-[10px] font-mono text-[#555] uppercase">
+                          {entry.date}
+                        </span>
+                        <span className="px-2 py-0.5 rounded bg-[#111213] border border-[rgba(255,255,255,0.06)] text-[10px] font-medium text-[#888] uppercase">
+                          {entry.category}
+                        </span>
+                      </div>
+                      <h3 className={`font-bold text-white mb-2 group-hover:text-white transition-colors ${isFeatured ? "text-xl" : "text-lg"}`}>
+                        {entry.title}
+                      </h3>
+                      <p className="text-sm text-[#555] line-clamp-3 leading-relaxed mb-4">
+                        {entry.content}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 mt-auto">
+                      {entry.tags.slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-[10px] text-[#555] bg-[#08090A]/50 px-1.5 py-0.5 rounded border border-[rgba(255,255,255,0.06)]/50"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  <h3 className="text-lg font-bold text-zinc-200 mb-2 group-hover:text-white transition-colors">
-                    {entry.title}
-                  </h3>
-                  <p className="text-sm text-zinc-500 line-clamp-3 leading-relaxed mb-4">
-                    {entry.content}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-1.5 mt-auto">
-                  {entry.tags.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-[10px] text-zinc-600 bg-zinc-950/50 px-1.5 py-0.5 rounded border border-zinc-800/50"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
+                </>
+              );
+            })}
           </div>
         ) : (
-          <div className="text-center py-24 border border-dashed border-zinc-800 rounded-xl bg-zinc-900/10">
-            <h3 className="text-zinc-400 font-medium mb-1">No entries found</h3>
-            <p className="text-sm text-zinc-600 mb-4">
+          <div className="text-center py-24 border border-dashed border-[rgba(255,255,255,0.06)] rounded-xl bg-[#111213]/10">
+            <h3 className="text-[#888] font-medium mb-1">No entries found</h3>
+            <p className="text-sm text-[#555] mb-4">
               Try adjusting your search or filters.
             </p>
             <button
@@ -204,19 +228,19 @@ export default function TIL() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-2xl bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl shadow-black overflow-hidden"
+              className="relative w-full max-w-2xl bg-[#08090A] border border-[rgba(255,255,255,0.06)] rounded-2xl shadow-2xl shadow-black overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-8 md:p-10">
                 <div className="flex items-start justify-between mb-8">
                   <div className="space-y-2">
-                    <div className="flex items-center gap-3 text-xs text-zinc-500 font-mono mb-2">
+                    <div className="flex items-center gap-3 text-xs text-[#555] font-mono mb-2">
                       <span className="flex items-center gap-1.5">
                         <Calendar className="h-3 w-3" />
                         {selectedEntry.date}
                       </span>
                       <span>•</span>
-                      <span className="uppercase tracking-widest font-semibold text-zinc-300 border border-zinc-800 px-2 py-0.5 rounded">
+                      <span className="uppercase tracking-widest font-semibold text-white border border-[rgba(255,255,255,0.06)] px-2 py-0.5 rounded">
                         {selectedEntry.category}
                       </span>
                     </div>
@@ -226,26 +250,26 @@ export default function TIL() {
                   </div>
                   <button
                     onClick={() => setSelectedEntry(null)}
-                    className="p-2 rounded-full hover:bg-zinc-900 text-zinc-500 hover:text-white transition-colors"
+                    className="p-2 rounded-full hover:bg-[#111213] text-[#555] hover:text-white transition-colors"
                   >
                     <X className="h-5 w-5" />
                   </button>
                 </div>
 
-                <div className="prose prose-invert max-w-none prose-p:text-zinc-400 prose-p:leading-relaxed prose-headings:text-zinc-200">
-                  {/* Render content with line breaks */}
+                <div className="prose prose-invert max-w-none prose-p:text-[#888] prose-p:leading-relaxed prose-headings:text-white">
+                  {/* Render content with line breaks, using Geist Mono for code */}
                   {selectedEntry.content.split("\n\n").map((paragraph, idx) => (
-                    <p key={idx}>{paragraph}</p>
+                    <p key={idx} className="font-mono text-sm">{paragraph}</p>
                   ))}
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-zinc-900 flex flex-wrap gap-2">
+                <div className="mt-10 pt-6 border-t border-[#111213] flex flex-wrap gap-2">
                   {selectedEntry.tags.map((tag) => (
                     <div
                       key={tag}
-                      className="inline-flex items-center gap-1.5 rounded-md bg-zinc-900 border border-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-300"
+                      className="inline-flex items-center gap-1.5 rounded-md bg-[#111213] border border-[rgba(255,255,255,0.06)] px-3 py-1.5 text-xs font-medium text-white"
                     >
-                      <Tag className="h-3 w-3 text-zinc-600" />
+                      <Tag className="h-3 w-3 text-[#555]" />
                       {tag}
                     </div>
                   ))}

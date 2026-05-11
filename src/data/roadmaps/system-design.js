@@ -1,0 +1,25 @@
+export const systemDesign = {
+  languageSlug: "system-design",
+  displayName: "System Design",
+  nodes: [
+    { id: "sd-01", position: { x: 0, y: 0 }, type: "roadmapNode", data: { title: "Scalability Basics", description: "Vertical vs horizontal scaling, stateless services, read/write ratios. The first principles of scale.", time: "3 hours", status: "pending", resources: [{ type: "video", title: "ByteByteGo — Scalability", url: "https://www.youtube.com/watch?v=uw-gcK9bjkk" }, { type: "doc", title: "system-design-primer", url: "https://github.com/donnemartin/system-design-primer" }] } },
+    { id: "sd-02", position: { x: 0, y: 150 }, type: "roadmapNode", data: { title: "Load Balancing", description: "Round robin, least connections, consistent hashing. L4 vs L7 load balancers. HAProxy, Nginx.", time: "3 hours", status: "pending", resources: [{ type: "video", title: "Gaurav Sen — Load Balancing", url: "https://www.youtube.com/watch?v=K0Ta65OqQkY" }, { type: "doc", title: "system-design-primer — Load Balancing", url: "https://github.com/donnemartin/system-design-primer#load-balancer" }] } },
+    { id: "sd-03", position: { x: 0, y: 300 }, type: "roadmapNode", data: { title: "Caching Strategies", description: "Cache-aside, write-through, write-back, cache invalidation. Redis, Memcached patterns.", time: "4 hours", status: "pending", resources: [{ type: "video", title: "ByteByteGo — Caching", url: "https://www.youtube.com/watch?v=dGAgxozNWFE" }, { type: "doc", title: "High Scalability — Caching", url: "http://highscalability.com/" }] } },
+    { id: "sd-04", position: { x: 0, y: 450 }, type: "roadmapNode", data: { title: "Database Design at Scale", description: "Read replicas, write sharding, denormalization, CQRS. When a single database isn't enough.", time: "4 hours", status: "pending", resources: [{ type: "video", title: "Gaurav Sen — Database Sharding", url: "https://www.youtube.com/watch?v=5faMjKuB9bc" }] } },
+    { id: "sd-05", position: { x: 0, y: 600 }, type: "roadmapNode", data: { title: "Message Queues", description: "Kafka, RabbitMQ, SQS. Async processing, event-driven architecture, pub/sub patterns.", time: "4 hours", status: "pending", resources: [{ type: "video", title: "ByteByteGo — Message Queues", url: "https://www.youtube.com/watch?v=W4_aGb_MOls" }, { type: "doc", title: "system-design-primer — Queues", url: "https://github.com/donnemartin/system-design-primer#message-queues" }] } },
+    { id: "sd-06", position: { x: 0, y: 750 }, type: "roadmapNode", data: { title: "Rate Limiting", description: "Token bucket, sliding window, fixed window. Protect services from abuse and overload.", time: "2 hours", status: "pending", resources: [{ type: "video", title: "ByteByteGo — Rate Limiting", url: "https://www.youtube.com/watch?v=FU4WlwfS3G0" }] } },
+    { id: "sd-07", position: { x: 0, y: 900 }, type: "roadmapNode", data: { title: "Microservices", description: "Service boundaries, API gateways, service mesh, saga pattern. When and why to decompose.", time: "4 hours", status: "pending", resources: [{ type: "video", title: "Gaurav Sen — Microservices", url: "https://www.youtube.com/watch?v=j1gU2oGFayY" }] } },
+    { id: "sd-08", position: { x: 0, y: 1050 }, type: "roadmapNode", data: { title: "API Design", description: "REST conventions, versioning, pagination, idempotency, GraphQL vs REST trade-offs.", time: "3 hours", status: "pending", resources: [{ type: "doc", title: "Google API Design Guide", url: "https://cloud.google.com/apis/design" }, { type: "video", title: "Fireship — RESTful APIs", url: "https://www.youtube.com/watch?v=-MTSQjw5DrM" }] } },
+    { id: "sd-09", position: { x: 0, y: 1200 }, type: "roadmapNode", data: { title: "Case Studies", description: "Design Twitter's feed, Netflix streaming, Uber dispatch. Apply everything in realistic scenarios.", time: "2 weeks", status: "pending", resources: [{ type: "video", title: "ByteByteGo — System Design Interview", url: "https://www.youtube.com/watch?v=UzLMhqg3_Wc" }, { type: "doc", title: "system-design-primer — Case Studies", url: "https://github.com/donnemartin/system-design-primer#system-design-interview-questions-with-solutions" }] } },
+  ],
+  edges: [
+    { id: "se1-2", source: "sd-01", target: "sd-02", animated: true },
+    { id: "se2-3", source: "sd-02", target: "sd-03", animated: true },
+    { id: "se3-4", source: "sd-03", target: "sd-04", animated: true },
+    { id: "se4-5", source: "sd-04", target: "sd-05", animated: true },
+    { id: "se5-6", source: "sd-05", target: "sd-06", animated: true },
+    { id: "se6-7", source: "sd-06", target: "sd-07", animated: true },
+    { id: "se7-8", source: "sd-07", target: "sd-08", animated: true },
+    { id: "se8-9", source: "sd-08", target: "sd-09", animated: true },
+  ],
+};

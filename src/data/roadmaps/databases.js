@@ -1,0 +1,25 @@
+export const databases = {
+  languageSlug: "databases",
+  displayName: "Databases",
+  nodes: [
+    { id: "db-01", position: { x: 0, y: 0 }, type: "roadmapNode", data: { title: "Relational Model", description: "Tables, rows, columns, keys, relationships. The foundational abstraction for structured data.", time: "2 hours", status: "pending", resources: [{ type: "video", title: "CMU Database Group — Relational Model", url: "https://www.youtube.com/watch?v=uikbtpVZS2s" }, { type: "doc", title: "PostgreSQL — Tutorial", url: "https://www.postgresql.org/docs/current/tutorial.html" }] } },
+    { id: "db-02", position: { x: 0, y: 150 }, type: "roadmapNode", data: { title: "SQL Fundamentals", description: "SELECT, INSERT, UPDATE, DELETE, WHERE, GROUP BY, ORDER BY. Think in sets, not loops.", time: "1 week", status: "pending", resources: [{ type: "video", title: "Fireship — SQL in 100 Seconds", url: "https://www.youtube.com/watch?v=zsjvFFKOm3c" }, { type: "doc", title: "SQLZoo", url: "https://sqlzoo.net/" }] } },
+    { id: "db-03", position: { x: 0, y: 300 }, type: "roadmapNode", data: { title: "Joins & Subqueries", description: "INNER, LEFT, RIGHT, FULL, CROSS joins. Correlated subqueries, CTEs, window functions.", time: "4 days", status: "pending", resources: [{ type: "video", title: "CMU Database Group — Joins", url: "https://www.youtube.com/watch?v=R3FmIWJcx2c" }, { type: "doc", title: "PostgreSQL — Joins", url: "https://www.postgresql.org/docs/current/tutorial-join.html" }] } },
+    { id: "db-04", position: { x: 0, y: 450 }, type: "roadmapNode", data: { title: "Indexing & B-Trees", description: "B+ trees, hash indexes, composite indexes, covering indexes. Make queries fast.", time: "4 days", status: "pending", resources: [{ type: "video", title: "CMU Database Group — Indexes", url: "https://www.youtube.com/watch?v=4cWkNbry5Zc" }, { type: "doc", title: "Use The Index, Luke", url: "https://use-the-index-luke.com/" }] } },
+    { id: "db-05", position: { x: 0, y: 600 }, type: "roadmapNode", data: { title: "Transactions & ACID", description: "Atomicity, Consistency, Isolation, Durability. Isolation levels, write-ahead logging.", time: "4 days", status: "pending", resources: [{ type: "video", title: "CMU Database Group — Transactions", url: "https://www.youtube.com/watch?v=P80Js_qClUE" }, { type: "doc", title: "PostgreSQL — Transaction Isolation", url: "https://www.postgresql.org/docs/current/transaction-iso.html" }] } },
+    { id: "db-06", position: { x: 0, y: 750 }, type: "roadmapNode", data: { title: "Query Optimisation", description: "EXPLAIN plans, query rewriting, statistics, join ordering. Understand what the database actually does.", time: "3 days", status: "pending", resources: [{ type: "video", title: "CMU — Query Optimisation", url: "https://www.youtube.com/watch?v=IHRyKuBMbQ0" }, { type: "doc", title: "Use The Index, Luke — Execution Plans", url: "https://use-the-index-luke.com/sql/explain-plan" }] } },
+    { id: "db-07", position: { x: 0, y: 900 }, type: "roadmapNode", data: { title: "NoSQL Paradigms", description: "Document stores, key-value, column-family, graph databases. When SQL isn't the right tool.", time: "4 hours", status: "pending", resources: [{ type: "video", title: "Fireship — 7 Database Paradigms", url: "https://www.youtube.com/watch?v=W2Z7fbCLSTw" }, { type: "doc", title: "MongoDB Docs", url: "https://www.mongodb.com/docs/" }] } },
+    { id: "db-08", position: { x: 0, y: 1050 }, type: "roadmapNode", data: { title: "CAP Theorem", description: "Consistency, Availability, Partition tolerance. The fundamental trade-off of distributed databases.", time: "2 hours", status: "pending", resources: [{ type: "video", title: "Hussein Nasser — CAP Theorem", url: "https://www.youtube.com/watch?v=BHqjEjzAicY" }] } },
+    { id: "db-09", position: { x: 0, y: 1200 }, type: "roadmapNode", data: { title: "Sharding & Replication", description: "Horizontal partitioning, leader-follower, multi-master. Scale databases beyond a single machine.", time: "3 hours", status: "pending", resources: [{ type: "video", title: "Hussein Nasser — Database Sharding", url: "https://www.youtube.com/watch?v=5faMjKuB9bc" }, { type: "doc", title: "PostgreSQL — Replication", url: "https://www.postgresql.org/docs/current/high-availability.html" }] } },
+  ],
+  edges: [
+    { id: "de1-2", source: "db-01", target: "db-02", animated: true },
+    { id: "de2-3", source: "db-02", target: "db-03", animated: true },
+    { id: "de3-4", source: "db-03", target: "db-04", animated: true },
+    { id: "de4-5", source: "db-04", target: "db-05", animated: true },
+    { id: "de5-6", source: "db-05", target: "db-06", animated: true },
+    { id: "de6-7", source: "db-06", target: "db-07", animated: true },
+    { id: "de7-8", source: "db-07", target: "db-08", animated: true },
+    { id: "de8-9", source: "db-08", target: "db-09", animated: true },
+  ],
+};

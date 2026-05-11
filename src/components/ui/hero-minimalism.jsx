@@ -91,7 +91,7 @@ export default function MinimalHero() {
   return (
     <section
       ref={containerRef}
-      className="minimal-root relative w-full h-screen overflow-hidden bg-[#050505] text-zinc-100 font-sans border-b border-zinc-800"
+      className="minimal-root relative w-full h-screen overflow-hidden bg-[#08090A] text-white font-sans border-b border-[rgba(255,255,255,0.06)]"
     >
       <style>{`
         @import url('https://fonts.cdnfonts.com/css/hubot-sans');
@@ -172,7 +172,7 @@ export default function MinimalHero() {
       />
 
       {/* Accent Lines */}
-      <div className="accent-lines text-zinc-100">
+      <div className="accent-lines text-white">
         <div className="hline" />
         <div className="hline" />
         <div className="hline" />
@@ -184,7 +184,7 @@ export default function MinimalHero() {
       {/* Hero Content */}
       <main className="absolute inset-0 grid place-items-center text-center z-10 pointer-events-none pb-32">
         <div className="pointer-events-auto px-4">
-          <div className="text-xs tracking-[0.14em] uppercase text-zinc-500 mb-4 font-semibold">
+          <div className="text-xs tracking-[0.14em] uppercase text-[#555] mb-4 font-semibold">
             DevMap Platform
           </div>
           <h1 className="text-4xl md:text-6xl lg:text-8xl font-semibold leading-[0.95] tracking-tight text-white">
@@ -192,7 +192,7 @@ export default function MinimalHero() {
             <br />
             Build Future.
           </h1>
-          <p className="mt-6 text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto">
+          <p className="mt-6 text-lg md:text-xl text-[#888] max-w-2xl mx-auto">
             Structured roadmaps to guide your developer journey.
           </p>
 
@@ -206,7 +206,7 @@ export default function MinimalHero() {
               </LiquidButton>
             </Link>
             <Link to="/resources">
-              <button className="inline-flex h-12 items-center justify-center rounded-md border border-zinc-700 bg-zinc-900/50 backdrop-blur-sm px-8 text-sm font-medium shadow-sm transition-colors hover:bg-zinc-800 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-300 disabled:pointer-events-none disabled:opacity-50">
+              <button className="inline-flex h-12 items-center justify-center rounded-md border border-[rgba(255,255,255,0.12)] bg-[#111213]/50 backdrop-blur-sm px-8 text-sm font-medium shadow-sm transition-colors hover:bg-[rgba(255,255,255,0.06)] hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white disabled:pointer-events-none disabled:opacity-50">
                 Browse Resources
               </button>
             </Link>
@@ -215,14 +215,14 @@ export default function MinimalHero() {
       </main>
 
       {/* Bottom Footer Content */}
-      <section className="absolute left-0 right-0 bottom-0 p-8 border-t border-zinc-800 grid place-items-center text-center gap-2 z-20 bg-zinc-900/50 backdrop-blur-sm">
-        <div className="text-xs tracking-widest uppercase text-zinc-500 font-medium">
+      <section className="absolute left-0 right-0 bottom-0 p-8 border-t border-[rgba(255,255,255,0.06)] grid place-items-center text-center gap-2 z-20 bg-[#111213]/50 backdrop-blur-sm">
+        <div className="text-xs tracking-widest uppercase text-[#555] font-medium">
           Community Driven
         </div>
         <div className="text-xl md:text-2xl font-semibold text-white">
           Open Source. Comprehensive. Free.
         </div>
-        <p className="text-sm text-zinc-500 max-w-2xl">
+        <p className="text-sm text-[#555] max-w-2xl">
           No more tutorial hell. Just a clear path forward for every language
           and framework you want to master.
         </p>

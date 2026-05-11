@@ -3,6 +3,7 @@ import { AppLayout } from "./components/layout/AppLayout";
 import { ScrollToTop } from "./components/layout/ScrollToTop";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import { CommandPalette } from "./components/ui/CommandPalette";
 import Home from "./pages/Home";
 import Languages from "./pages/Languages";
 import RoadmapViewer from "./pages/RoadmapViewer";
@@ -12,12 +13,14 @@ import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
 import TIL from "./pages/TIL";
 import PublicProfile from "./pages/PublicProfile";
+import CSCore from "./pages/CSCore";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <AuthProvider>
         <BrowserRouter>
+          <CommandPalette />
           <ScrollToTop />
           <Routes>
             <Route element={<AppLayout />}>
@@ -31,6 +34,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/til" element={<TIL />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/cs-core" element={<CSCore />} />
               <Route path="/u/:username" element={<PublicProfile />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>

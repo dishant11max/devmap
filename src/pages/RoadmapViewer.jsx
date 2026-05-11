@@ -27,12 +27,12 @@ export default function RoadmapViewer() {
 
   if (!roadmapData) {
     return (
-      <div className="flex h-[50vh] flex-col items-center justify-center gap-4 bg-[#050505] text-zinc-100">
+      <div className="flex h-[50vh] flex-col items-center justify-center gap-4 bg-[#08090A] text-white">
         <h1 className="text-2xl font-bold">Roadmap not found</h1>
         <Button
           onClick={() => navigate("/languages")}
           variant="outline"
-          className="border-zinc-700"
+          className="border-[rgba(255,255,255,0.12)]"
         >
           Back to Languages
         </Button>
@@ -60,18 +60,18 @@ export default function RoadmapViewer() {
   const progress = totalSteps > 0 ? (completedCount / totalSteps) * 100 : 0;
 
   return (
-    <div className="relative flex h-[calc(100vh-3.5rem)] flex-col overflow-hidden bg-[#050505] text-zinc-100 selection:bg-white/20">
+    <div className="relative flex h-[calc(100vh-3.5rem)] flex-col overflow-hidden bg-[#08090A] text-white selection:bg-white/20">
       {/* Background Grid */}
       <div className="absolute inset-0 bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:24px_24px] opacity-20 pointer-events-none" />
 
       {/* Top Bar - Floating Glass */}
-      <div className="absolute top-4 left-4 right-4 z-40 flex items-center justify-between bg-zinc-900/60 backdrop-blur-md border border-zinc-800 rounded-xl px-4 py-3 shadow-2xl">
+      <div className="absolute top-4 left-4 right-4 z-40 flex items-center justify-between bg-[#111213]/60 backdrop-blur-md border border-[rgba(255,255,255,0.06)] rounded-xl px-4 py-3 shadow-2xl">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => navigate("/languages")}
-            className="text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full h-8 w-8"
+            className="text-[#888] hover:text-white hover:bg-[rgba(255,255,255,0.06)] rounded-full h-8 w-8"
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
@@ -80,11 +80,11 @@ export default function RoadmapViewer() {
               <h1 className="text-sm font-bold leading-none text-white tracking-wide uppercase">
                 {roadmapData.displayName}
               </h1>
-              <span className="text-[10px] bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded border border-zinc-700">
+              <span className="text-[10px] bg-[rgba(255,255,255,0.06)] text-[#888] px-1.5 py-0.5 rounded border border-[rgba(255,255,255,0.12)]">
                 Roadmap
               </span>
             </div>
-            <p className="text-[10px] text-zinc-500 font-mono mt-0.5">
+            <p className="text-[10px] text-[#555] font-mono mt-0.5">
               {completedCount}/{totalSteps} modules completed
             </p>
           </div>
@@ -93,25 +93,25 @@ export default function RoadmapViewer() {
         <div className="flex items-center gap-6">
           {/* Progress Segment */}
           <div className="flex items-center gap-3">
-            <div className="w-32 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+            <div className="w-32 h-1.5 bg-[rgba(255,255,255,0.06)] rounded-full overflow-hidden">
               <div
                 className="h-full bg-white transition-all duration-500 ease-out"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <span className="text-xs font-mono font-medium text-zinc-300 w-9 text-right">
+            <span className="text-xs font-mono font-medium text-white w-9 text-right">
               {Math.round(progress)}%
             </span>
           </div>
 
-          <div className="h-4 w-[1px] bg-zinc-800" />
+          <div className="h-4 w-[1px] bg-[rgba(255,255,255,0.06)]" />
 
           <Button
             variant="ghost"
             size="icon"
             onClick={resetProgress}
             title="Reset Progress"
-            className="text-zinc-500 hover:text-red-400 hover:bg-zinc-800/50 rounded-full h-8 w-8"
+            className="text-[#555] hover:text-red-400 hover:bg-[rgba(255,255,255,0.06)]/50 rounded-full h-8 w-8"
           >
             <RefreshCcw className="h-3.5 w-3.5" />
           </Button>
