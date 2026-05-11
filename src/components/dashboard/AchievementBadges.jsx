@@ -9,7 +9,7 @@ export function AchievementBadges({ stats }) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Award className="h-5 w-5 text-primary" />
+          <Award className="h-5 w-5 text-white" />
           Achievements
         </CardTitle>
       </CardHeader>
@@ -30,7 +30,7 @@ export function AchievementBadges({ stats }) {
 
                   {/* Tooltip */}
                   <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-popover border border-border rounded-lg text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-xl backdrop-blur-sm">
-                    <p className="font-bold text-primary">{badge.name}</p>
+                    <p className="font-bold text-white">{badge.name}</p>
                     <p className="text-muted-foreground">{badge.description}</p>
                   </div>
                 </div>
@@ -61,7 +61,7 @@ export function AchievementBadges({ stats }) {
                     <p className="text-muted-foreground/50">
                       {badge.description}
                     </p>
-                    <p className="text-[10px] text-primary mt-1 font-bold">
+                    <p className="text-[10px] text-white mt-1 font-bold">
                       LOCKED
                     </p>
                   </div>

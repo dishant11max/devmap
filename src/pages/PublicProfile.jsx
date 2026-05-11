@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { languages } from "../data/languages";
+import { csCoreRoadmaps } from "../data/csCore";
 import { roadmaps } from "../data/roadmaps";
 import { Button } from "../components/ui/Button";
 import { Zap, ArrowLeft, User, Target, Trophy } from "lucide-react";
@@ -55,7 +56,8 @@ export default function PublicProfile() {
         }
 
         const aggregatedProgress = {};
-        languages.forEach((lang) => {
+        const allTracks = [...languages, ...csCoreRoadmaps];
+        allTracks.forEach((lang) => {
           aggregatedProgress[lang.id] = {
             completed: 0,
             total: roadmaps[lang.id]?.nodes?.length || 20,
@@ -193,7 +195,7 @@ export default function PublicProfile() {
               {xp.toLocaleString()}
             </div>
             <div className="text-xs text-[#555] mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
-              <Zap className="h-3 w-3 text-yellow-500" />
+              <Zap className="h-3 w-3 text-white" />
               XP Earned
             </div>
           </div>
@@ -237,8 +239,8 @@ export default function PublicProfile() {
                 <Radar
                   name="Skills"
                   dataKey="A"
-                  stroke="#22c55e"
-                  fill="#22c55e"
+                  stroke="#ffffff"
+                  fill="#ffffff"
                   fillOpacity={0.3}
                 />
                 <Tooltip
@@ -247,7 +249,7 @@ export default function PublicProfile() {
                     borderColor: "#27272a",
                     borderRadius: "8px",
                   }}
-                  itemStyle={{ color: "#22c55e" }}
+                  itemStyle={{ color: "#ffffff" }}
                 />
               </RadarChart>
             </ResponsiveContainer>

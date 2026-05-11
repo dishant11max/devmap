@@ -5,8 +5,11 @@ import { Share2, Zap, Target, Trophy, ArrowRight, Check, Map } from "lucide-reac
 import { AchievementBadges } from "../components/dashboard/AchievementBadges";
 import { AnimatedFlame } from "../components/dashboard/AnimatedFlame";
 import { languages } from "../data/languages";
+import { csCoreRoadmaps } from "../data/csCore";
 import { roadmaps } from "../data/roadmaps";
 import { Button } from "../components/ui/Button";
+
+const allTracks = [...languages, ...csCoreRoadmaps];
 import {
   ResponsiveContainer,
   BarChart,
@@ -22,7 +25,7 @@ const getAllProgress = () => {
   const allProgress = {};
   const history = [];
 
-  languages.forEach((lang) => {
+  allTracks.forEach((lang) => {
     const saved = localStorage.getItem(`devmap_progress_${lang.id}`);
     let realTotal = lang.steps || 20;
     if (roadmaps[lang.id] && roadmaps[lang.id].nodes) {
@@ -93,7 +96,7 @@ export default function Dashboard() {
             .eq("user_id", user.id);
 
           if (!error && data) {
-            languages.forEach((lang) => {
+            allTracks.forEach((lang) => {
               aggregatedProgress[lang.id] = {
                 completed: 0,
                 total: roadmaps[lang.id]?.nodes?.length || 20,
@@ -196,19 +199,14 @@ export default function Dashboard() {
   const displayLevel = level;
   const displayXp = xp;
 
-  const inProgressRoadmaps = [];
-  Object.keys(progressData).forEach((key) => {
-    const lang = languages.find((l) => l.id === key);
-    if (!lang) return;
-    const p = progressData[key];
-    if (p.completed > 0 && p.completed < p.total) {
-      inProgressRoadmaps.push(lang);
-    }
-  });
-
   const roadmapsStarted = Object.values(progressData).filter(
     (p) => p.completed > 0,
   ).length;
+
+  const inProgressRoadmaps = allTracks
+    .filter((l) => progressData[l.id]?.completed > 0)
+    .sort((a, b) => progressData[b.id].completed - progressData[a.id].completed);
+
   const badgesEarned = [
     totalCompletedNodes >= 1,
     totalCompletedNodes > 0,
@@ -276,7 +274,7 @@ export default function Dashboard() {
                     Lv.{displayLevel}
                   </div>
                   <div className="flex items-center gap-1.5 text-white">
-                    <Zap className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />
+                    <Zap className="h-3.5 w-3.5 text-white fill-white" />
                     {displayXp.toLocaleString()} XP
                   </div>
                 </div>
@@ -379,7 +377,7 @@ export default function Dashboard() {
                       {chartData.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
-                          fill={entry.count > 0 ? "#22c55e" : "#27272a"}
+                          fill={entry.count > 0 ? "#ffffff" : "#1A1A1A"}
                           className="transition-all duration-300 hover:opacity-80"
                         />
                       ))}
@@ -552,7 +550,7 @@ export default function Dashboard() {
               >
                 <Link to="/til">
                   <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-yellow-500" />
+                    <Zap className="h-4 w-4 text-white" />
                     <span>TIL</span>
                   </div>
                 </Link>

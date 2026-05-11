@@ -30,11 +30,11 @@ export default function RoadmapViewer() {
       <div className="flex h-[50vh] flex-col items-center justify-center gap-4 bg-[#08090A] text-white">
         <h1 className="text-2xl font-bold">Roadmap not found</h1>
         <Button
-          onClick={() => navigate("/languages")}
+          onClick={() => navigate(-1)}
           variant="outline"
           className="border-[rgba(255,255,255,0.12)]"
         >
-          Back to Languages
+          Go Back
         </Button>
       </div>
     );
@@ -70,7 +70,7 @@ export default function RoadmapViewer() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/languages")}
+            onClick={() => navigate(-1)}
             className="text-[#888] hover:text-white hover:bg-[rgba(255,255,255,0.06)] rounded-full h-8 w-8"
           >
             <ArrowLeft className="h-4 w-4" />

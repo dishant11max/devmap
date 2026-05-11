@@ -40,12 +40,12 @@ export function RoadmapCanvas({
         ...edge,
         animated: !sourceCompleted, // Stop animation when done maybe? Or keep it.
         style: {
-          stroke: sourceCompleted ? "#22c55e" : "#64748b",
+          stroke: sourceCompleted ? "#ffffff" : "#555",
           strokeWidth: 2,
         },
         markerEnd: {
           type: MarkerType.ArrowClosed,
-          color: sourceCompleted ? "#22c55e" : "#64748b",
+          color: sourceCompleted ? "#ffffff" : "#555",
         },
       };
     });

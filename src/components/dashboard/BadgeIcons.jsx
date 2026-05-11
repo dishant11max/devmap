@@ -15,8 +15,8 @@ export const BadgeIcons = {
           y2="20"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#4ade80" />
-          <stop offset="1" stopColor="#22c55e" />
+          <stop stopColor="#888888" />
+          <stop offset="1" stopColor="#ffffff" />
         </linearGradient>
         <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="2" result="blur" />
@@ -30,12 +30,12 @@ export const BadgeIcons = {
         stroke="url(#leafGradient)"
         strokeWidth="2"
         strokeOpacity="0.3"
-        fill="#22c55e"
+        fill="#ffffff"
         fillOpacity="0.1"
       />
       <path
         d="M50 80V50"
-        stroke="#22c55e"
+        stroke="#ffffff"
         strokeWidth="4"
         strokeLinecap="round"
       />
