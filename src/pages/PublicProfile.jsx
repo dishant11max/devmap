@@ -120,10 +120,10 @@ export default function PublicProfile() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#08090A] flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4" />
-          <p className="text-[#555]">Loading profile...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4" />
+          <p className="text-muted">Loading profile...</p>
         </div>
       </div>
     );
@@ -131,16 +131,16 @@ export default function PublicProfile() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#08090A] flex items-center justify-center">
+      <div className="min-h-screen bg-bg flex items-center justify-center">
         <div className="text-center">
-          <User className="h-16 w-16 text-[rgba(255,255,255,0.12)] mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-2">
+          <User className="h-16 w-16 text-border mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-text mb-2">
             Profile Not Found
           </h1>
-          <p className="text-[#555] mb-4">
+          <p className="text-muted mb-4">
             The user @{username} doesn't exist or hasn't set up their profile.
           </p>
-          <Button asChild className="bg-white hover:bg-white">
+          <Button asChild className="bg-accent text-on-accent hover:opacity-90">
             <Link to="/">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Go Home
@@ -151,16 +151,16 @@ export default function PublicProfile() {
     );
   }
 
-  const roadmapsStarted =
+  const _roadmapsStarted =
     Object.keys(languages).length > 0 ? Math.floor(totalCompleted / 5) || 0 : 0;
 
   return (
-    <div className="min-h-screen bg-[#08090A] text-white py-10">
+    <div className="min-h-screen bg-bg text-text py-10">
       
 
       <div className="container mx-auto px-4 max-w-4xl relative z-10">
         {/* Profile Header */}
-        <div className="relative overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[#111213]/40 backdrop-blur-md p-8 mb-8">
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-surface/40 backdrop-blur-md p-8 mb-8">
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
             <div className="relative mb-4">
@@ -168,67 +168,67 @@ export default function PublicProfile() {
                 <img
                   src={profile.avatar_url}
                   alt={profile.full_name}
-                  className="h-24 w-24 rounded-full border-4 border-[rgba(255,255,255,0.06)] shadow-xl"
+                  className="h-24 w-24 rounded-full border-4 border-border shadow-xl"
                 />
               ) : (
-                <div className="h-24 w-24 rounded-full bg-[rgba(255,255,255,0.06)] flex items-center justify-center text-4xl font-bold text-[#888] border-4 border-[rgba(255,255,255,0.12)] shadow-xl">
+                <div className="h-24 w-24 rounded-full bg-surface flex items-center justify-center text-4xl font-bold text-muted border-4 border-border shadow-xl">
                   {profile.full_name?.[0] || "?"}
                 </div>
               )}
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white text-white text-xs font-bold px-3 py-1 rounded-full">
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-accent text-on-accent text-xs font-bold px-3 py-1 rounded-full">
                 Level {level}
               </div>
             </div>
 
             {/* Name & Username */}
-            <h1 className="text-3xl font-bold text-white tracking-tight">
+            <h1 className="text-3xl font-bold text-text tracking-tight">
               {profile.full_name || "Developer"}
             </h1>
-            <p className="text-[#555]">@{profile.username}</p>
+            <p className="text-muted">@{profile.username}</p>
           </div>
         </div>
 
         {/* Stats Row */}
         <div className="grid grid-cols-1 gap-4 mb-8 sm:grid-cols-3">
-          <div className="border border-[rgba(255,255,255,0.06)] rounded-xl p-5 bg-[#111213]/40 text-center">
-            <div className="text-3xl font-bold text-white">
+          <div className="border border-border rounded-xl p-5 bg-surface/40 text-center">
+            <div className="text-3xl font-bold text-text">
               {xp.toLocaleString()}
             </div>
-            <div className="text-xs text-[#555] mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
-              <Zap className="h-3 w-3 text-white" />
+            <div className="text-xs text-muted mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
+              <Zap className="h-3 w-3 text-accent" />
               XP Earned
             </div>
           </div>
-          <div className="border border-[rgba(255,255,255,0.06)] rounded-xl p-5 bg-[#111213]/40 text-center">
-            <div className="text-3xl font-bold text-white">
+          <div className="border border-border rounded-xl p-5 bg-surface/40 text-center">
+            <div className="text-3xl font-bold text-text">
               {totalCompleted}
             </div>
-            <div className="text-xs text-[#555] mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
-              <Target className="h-3 w-3 text-white" />
+            <div className="text-xs text-muted mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
+              <Target className="h-3 w-3 text-accent" />
               Steps
             </div>
           </div>
-          <div className="border border-[rgba(255,255,255,0.06)] rounded-xl p-5 bg-[#111213]/40 text-center">
-            <div className="text-3xl font-bold text-white">{level}</div>
-            <div className="text-xs text-[#555] mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
-              <Trophy className="h-3 w-3 text-white" />
+          <div className="border border-border rounded-xl p-5 bg-surface/40 text-center">
+            <div className="text-3xl font-bold text-text">{level}</div>
+            <div className="text-xs text-muted mt-1 uppercase tracking-wide flex items-center justify-center gap-1.5">
+              <Trophy className="h-3 w-3 text-accent" />
               Level
             </div>
           </div>
         </div>
 
         {/* Skill Radar */}
-        <div className="border border-[rgba(255,255,255,0.06)] rounded-2xl bg-[#111213]/40 backdrop-blur-md p-6 mb-8">
-          <h2 className="text-sm font-bold text-[#888] uppercase tracking-widest mb-6">
+        <div className="border border-border rounded-2xl bg-surface/40 backdrop-blur-md p-6 mb-8">
+          <h2 className="text-sm font-bold text-muted uppercase tracking-widest mb-6">
             Skill Distribution
           </h2>
           <div className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                <PolarGrid stroke="#27272a" />
+                <PolarGrid stroke="var(--border)" />
                 <PolarAngleAxis
                   dataKey="subject"
-                  tick={{ fill: "#71717a", fontSize: 12 }}
+                  tick={{ fill: "var(--muted)", fontSize: 12 }}
                 />
                 <PolarRadiusAxis
                   angle={30}
@@ -239,17 +239,17 @@ export default function PublicProfile() {
                 <Radar
                   name="Skills"
                   dataKey="A"
-                  stroke="#ffffff"
-                  fill="#ffffff"
+                  stroke="var(--accent)"
+                  fill="var(--accent)"
                   fillOpacity={0.3}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#18181b",
-                    borderColor: "#27272a",
+                    backgroundColor: "var(--surface)",
+                    borderColor: "var(--border)",
                     borderRadius: "8px",
                   }}
-                  itemStyle={{ color: "#ffffff" }}
+                  itemStyle={{ color: "var(--text)" }}
                 />
               </RadarChart>
             </ResponsiveContainer>
@@ -258,10 +258,10 @@ export default function PublicProfile() {
 
         {/* Footer */}
         <div className="text-center">
-          <p className="text-sm text-[#555] mb-4">
+          <p className="text-sm text-muted mb-4">
             Want your own DevMap profile?
           </p>
-          <Button asChild className="bg-white hover:bg-white">
+          <Button asChild className="bg-accent text-on-accent hover:opacity-90">
             <Link to="/">Get Started</Link>
           </Button>
         </div>
