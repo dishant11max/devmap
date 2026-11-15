@@ -42,6 +42,7 @@ import {
 import { roadmaps }              from "../../data/roadmaps";
 import { tilEntries }            from "../../data/til";
 import { totalResourcesCount }   from "../../data/resources";
+import { ScrollReveal }          from "../ui/ScrollReveal";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -153,66 +154,68 @@ function TrackGrid() {
   return (
     <section className="py-16 md:py-24">
       <div className="w-full max-w-[1440px] mx-auto px-6">
-        {/* Stat line: 12px mono --muted */}
-        <p
-          className="font-mono mb-5"
-          style={{ fontSize: "12px", color: "var(--muted)", userSelect: "none" }}
-        >
-          {totalTracks} tracks &middot; {totalNodes} nodes &middot; {totalTil} TIL entries &middot; {totalResources} resources
-        </p>
+        <ScrollReveal y={20}>
+          {/* Stat line: 12px mono --muted */}
+          <p
+            className="font-mono mb-5"
+            style={{ fontSize: "12px", color: "var(--muted)", userSelect: "none" }}
+          >
+            {totalTracks} tracks &middot; {totalNodes} nodes &middot; {totalTil} TIL entries &middot; {totalResources} resources
+          </p>
 
-        {/*
-          Grid: 2 col mobile / 3 col sm (640px) / 6 col lg (1024px).
-          Hairline 1px borders via box-shadow on the outer wrapper + right/bottom
-          borders on each cell using outline trick — works without gap.
-          We use border on the outer container and each tile gets a right + bottom
-          border. The CSS grid has no gap.
-        */}
-        <div
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
-          style={{ border: "1px solid var(--border)" }}
-        >
-          {tiles.map((tile) => (
-            <Link
-              key={tile.slug}
-              to={tile.to}
-              className="group flex flex-col justify-center focus-visible:outline-none"
-              style={{
-                padding:        "20px 16px",
-                minHeight:      "96px",
-                borderRight:    "1px solid var(--border)",
-                borderBottom:   "1px solid var(--border)",
-                color:          "var(--muted)",
-                textDecoration: "none",
-                transition:     "background 120ms, color 120ms",
-                // We'll override color on hover via CSS class below
-              }}
-            >
-              {/* Focus ring */}
-              <style>{`.track-tile:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }`}</style>
-              {!tile.isAll && (
-                <span className="mb-2.5 group-hover:text-[var(--text)] transition-colors duration-[120ms]">
-                  <TrackIcon slug={tile.slug} size={28} />
-                </span>
-              )}
-              <span
-                className="font-mono font-medium leading-tight group-hover:text-[var(--text)] transition-colors duration-[120ms]"
-                style={{ fontSize: "12px", color: tile.isAll ? "var(--muted)" : "var(--text)" }}
+          {/*
+            Grid: 2 col mobile / 3 col sm (640px) / 6 col lg (1024px).
+            Hairline 1px borders via box-shadow on the outer wrapper + right/bottom
+            borders on each cell using outline trick — works without gap.
+            We use border on the outer container and each tile gets a right + bottom
+            border. The CSS grid has no gap.
+          */}
+          <div
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6"
+            style={{ border: "1px solid var(--border)" }}
+          >
+            {tiles.map((tile) => (
+              <Link
+                key={tile.slug}
+                to={tile.to}
+                className="group flex flex-col justify-center focus-visible:outline-none"
+                style={{
+                  padding:        "20px 16px",
+                  minHeight:      "96px",
+                  borderRight:    "1px solid var(--border)",
+                  borderBottom:   "1px solid var(--border)",
+                  color:          "var(--muted)",
+                  textDecoration: "none",
+                  transition:     "background 120ms, color 120ms",
+                  // We'll override color on hover via CSS class below
+                }}
               >
-                {tile.name}
-              </span>
-              {!tile.isAll && (
+                {/* Focus ring */}
+                <style>{`.track-tile:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }`}</style>
+                {!tile.isAll && (
+                  <span className="mb-2.5 group-hover:text-[var(--text)] transition-colors duration-[120ms]">
+                    <TrackIcon slug={tile.slug} size={28} />
+                  </span>
+                )}
                 <span
-                  className="font-mono mt-0.5"
-                  style={{ fontSize: "12px", color: "var(--muted)" }}
+                  className="font-mono font-medium leading-tight group-hover:text-[var(--text)] transition-colors duration-[120ms]"
+                  style={{ fontSize: "12px", color: tile.isAll ? "var(--muted)" : "var(--text)" }}
                 >
-                  {tile.nodes} nodes
+                  {tile.name}
                 </span>
-              )}
-              {/* Background on hover via pseudo-class — use Tailwind group-hover */}
-            </Link>
-          ))}
-        </div>
+                {!tile.isAll && (
+                  <span
+                    className="font-mono mt-0.5"
+                    style={{ fontSize: "12px", color: "var(--muted)" }}
+                  >
+                    {tile.nodes} nodes
+                  </span>
+                )}
+                {/* Background on hover via pseudo-class — use Tailwind group-hover */}
+              </Link>
+            ))}
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
@@ -291,30 +294,32 @@ function FeatureGrid() {
   return (
     <section className="py-16 md:py-24">
       <div className="w-full max-w-[1440px] mx-auto px-6">
-        {/* Outer 1px border box, 4px radius, inner cells divided by 1px lines */}
-        <div
-          style={{
-            border:       "1px solid var(--border)",
-            borderRadius: "4px",
-            overflow:     "hidden",
-          }}
-        >
-          {/* Row 1: 2 cells — 1 col mobile, 2 col sm+ */}
-          <div className="grid grid-cols-1 sm:grid-cols-2">
-            <FeatureCell cell={cells[0]} borderRight borderBottom />
-            <FeatureCell cell={cells[1]} borderRight={false} borderBottom />
-          </div>
+        <ScrollReveal y={20}>
+          {/* Outer 1px border box, 4px radius, inner cells divided by 1px lines */}
+          <div
+            style={{
+              border:       "1px solid var(--border)",
+              borderRadius: "4px",
+              overflow:     "hidden",
+            }}
+          >
+            {/* Row 1: 2 cells — 1 col mobile, 2 col sm+ */}
+            <div className="grid grid-cols-1 sm:grid-cols-2">
+              <FeatureCell cell={cells[0]} borderRight borderBottom />
+              <FeatureCell cell={cells[1]} borderRight={false} borderBottom />
+            </div>
 
-          {/* Row 2: 3 cells — 1 col mobile, 3 col sm+ */}
-          <div className="grid grid-cols-1 sm:grid-cols-3">
-            <FeatureCell cell={cells[2]} borderRight borderBottom />
-            <FeatureCell cell={cells[3]} borderRight borderBottom />
-            <FeatureCell cell={cells[4]} borderRight={false} borderBottom />
-          </div>
+            {/* Row 2: 3 cells — 1 col mobile, 3 col sm+ */}
+            <div className="grid grid-cols-1 sm:grid-cols-3">
+              <FeatureCell cell={cells[2]} borderRight borderBottom />
+              <FeatureCell cell={cells[3]} borderRight borderBottom />
+              <FeatureCell cell={cells[4]} borderRight={false} borderBottom />
+            </div>
 
-          {/* Row 3: 1 wide cell */}
-          <FeatureCell cell={cells[5]} borderRight={false} borderBottom={false} />
-        </div>
+            {/* Row 3: 1 wide cell */}
+            <FeatureCell cell={cells[5]} borderRight={false} borderBottom={false} />
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
@@ -402,7 +407,8 @@ function ComparisonTable() {
   return (
     <section className="py-16 md:py-24">
       <div className="w-full max-w-[1440px] mx-auto px-6">
-        {/* Heading row */}
+        <ScrollReveal y={20}>
+          {/* Heading row */}
         <div
           className="flex items-baseline justify-between gap-4 flex-wrap mb-6"
         >
@@ -557,6 +563,7 @@ function ComparisonTable() {
             </tbody>
           </table>
         </div>
+        </ScrollReveal>
       </div>
     </section>
   );
@@ -575,85 +582,87 @@ function ClosingCTA() {
         className="w-full max-w-[1440px] mx-auto px-6 flex flex-col items-center"
         style={{ textAlign: "center" }}
       >
-        <h2
-          className="font-sans font-medium"
-          style={{
-            fontSize:      "clamp(32px, 4vw, 48px)",
-            color:         "var(--text)",
-            lineHeight:    1.1,
-            letterSpacing: "-0.01em",
-            margin:        0,
-          }}
-        >
-          Start with a track.
-        </h2>
-
-        <p
-          className="font-sans mt-4"
-          style={{ fontSize: "16px", color: "var(--muted)", lineHeight: 1.5, margin: "16px 0 0" }}
-        >
-          Free and open source. Progress saves in your browser.
-        </p>
-
-        {/* Command bar — matches hero's $ open roadmaps bar */}
-        <div
-          className="flex items-center justify-between font-mono mt-8 w-full"
-          style={{
-            maxWidth:   "520px",
-            height:     "40px",
-            padding:    "0 14px",
-            border:     "1px solid var(--border)",
-            background: "color-mix(in srgb, var(--bg) 90%, var(--surface) 10%)",
-            borderRadius: "2px",
-            marginTop:  "32px",
-          }}
-        >
-          <div className="flex items-center gap-2" style={{ color: "var(--text)" }}>
-            <span
-              className="font-bold"
-              style={{ color: "var(--accent)", fontSize: "12px" }}
-            >
-              $
-            </span>
-            <span style={{ fontSize: "12px", letterSpacing: "0.02em" }}>
-              open roadmaps/rust
-            </span>
-          </div>
-          <Link
-            to="/roadmap/rust"
-            className="font-mono font-bold"
+        <ScrollReveal y={20} className="w-full flex flex-col items-center">
+          <h2
+            className="font-sans font-medium"
             style={{
-              fontSize:     "12px",
-              padding:      "4px 10px",
+              fontSize:      "clamp(32px, 4vw, 48px)",
+              color:         "var(--text)",
+              lineHeight:    1.1,
+              letterSpacing: "-0.01em",
+              margin:        0,
+            }}
+          >
+            Start with a track.
+          </h2>
+
+          <p
+            className="font-sans mt-4"
+            style={{ fontSize: "16px", color: "var(--muted)", lineHeight: 1.5, margin: "16px 0 0" }}
+          >
+            Free and open source. Progress saves in your browser.
+          </p>
+
+          {/* Command bar — matches hero's $ open roadmaps bar */}
+          <div
+            className="flex items-center justify-between font-mono mt-8 w-full"
+            style={{
+              maxWidth:   "520px",
+              height:     "40px",
+              padding:    "0 14px",
+              border:     "1px solid var(--border)",
+              background: "color-mix(in srgb, var(--bg) 90%, var(--surface) 10%)",
               borderRadius: "2px",
-              background:   "var(--accent)",
-              color:        "var(--on-accent)",
-              textDecoration: "none",
-              letterSpacing:  "-0.01em",
+              marginTop:  "32px",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
           >
-            Open →
-          </Link>
-        </div>
+            <div className="flex items-center gap-2" style={{ color: "var(--text)" }}>
+              <span
+                className="font-bold"
+                style={{ color: "var(--accent)", fontSize: "12px" }}
+              >
+                $
+              </span>
+              <span style={{ fontSize: "12px", letterSpacing: "0.02em" }}>
+                open roadmaps/rust
+              </span>
+            </div>
+            <Link
+              to="/roadmap/rust"
+              className="font-mono font-bold"
+              style={{
+                fontSize:     "12px",
+                padding:      "4px 10px",
+                borderRadius: "2px",
+                background:   "var(--accent)",
+                color:        "var(--on-accent)",
+                textDecoration: "none",
+                letterSpacing:  "-0.01em",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              Open →
+            </Link>
+          </div>
 
-        {/* Browse all */}
-        <p
-          className="font-mono"
-          style={{ fontSize: "12px", color: "var(--muted)", marginTop: "20px" }}
-        >
-          or{" "}
-          <Link
-            to="/languages"
-            style={{
-              color:          "var(--muted)",
-              textDecoration: "underline",
-            }}
+          {/* Browse all */}
+          <p
+            className="font-mono"
+            style={{ fontSize: "12px", color: "var(--muted)", marginTop: "20px" }}
           >
-            browse all {totalTracks} tracks
-          </Link>
-        </p>
+            or{" "}
+            <Link
+              to="/languages"
+              style={{
+                color:          "var(--muted)",
+                textDecoration: "underline",
+              }}
+            >
+              browse all {totalTracks} tracks
+            </Link>
+          </p>
+        </ScrollReveal>
       </div>
     </section>
   );

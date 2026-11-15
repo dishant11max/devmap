@@ -23,6 +23,7 @@ import {
 } from "recharts";
 import { supabase } from "../lib/supabase";
 import { useUserProfile } from "../hooks/useUserProfile";
+import { ScrollReveal } from "../components/ui/ScrollReveal";
 
 const CONTAINER = "w-full max-w-[1440px] mx-auto px-6";
 const allTracks = [...languages, ...csCoreRoadmaps];
@@ -295,55 +296,58 @@ export default function Dashboard() {
           </div>
 
           {/* ── Stats Strip (2x2 on mobile, 4 columns on md+) ──────── */}
-          <div className="grid grid-cols-2 md:grid-cols-4 border border-border rounded-[2px] mt-8 md:mt-12 bg-surface/20 divide-y md:divide-y-0 divide-x-0 md:divide-x divide-border">
-            {/* Cell 1: Nodes completed */}
-            <div className="p-4 sm:p-6 border-r border-border md:border-r-0">
-              <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
-                {totalCompletedNodes}
+          <ScrollReveal delay={0.05} y={16}>
+            <div className="grid grid-cols-2 md:grid-cols-4 border border-border rounded-[2px] mt-8 md:mt-12 bg-surface/20 divide-y md:divide-y-0 divide-x-0 md:divide-x divide-border">
+              {/* Cell 1: Nodes completed */}
+              <div className="p-4 sm:p-6 border-r border-border md:border-r-0">
+                <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
+                  {totalCompletedNodes}
+                </div>
+                <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
+                  <Target className="h-3 w-3 shrink-0" />
+                  <span>nodes completed</span>
+                </div>
               </div>
-              <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
-                <Target className="h-3 w-3 shrink-0" />
-                <span>nodes completed</span>
-              </div>
-            </div>
 
-            {/* Cell 2: Tracks active */}
-            <div className="p-4 sm:p-6">
-              <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
-                {roadmapsStarted}
+              {/* Cell 2: Tracks active */}
+              <div className="p-4 sm:p-6">
+                <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
+                  {roadmapsStarted}
+                </div>
+                <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
+                  <Map className="h-3 w-3 shrink-0" />
+                  <span>tracks active</span>
+                </div>
               </div>
-              <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
-                <Map className="h-3 w-3 shrink-0" />
-                <span>tracks active</span>
-              </div>
-            </div>
 
-            {/* Cell 3: Current level */}
-            <div className="p-4 sm:p-6 border-r border-border md:border-r-0">
-              <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
-                {displayLevel}
+              {/* Cell 3: Current level */}
+              <div className="p-4 sm:p-6 border-r border-border md:border-r-0">
+                <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
+                  {displayLevel}
+                </div>
+                <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
+                  <Zap className="h-3 w-3 shrink-0" />
+                  <span>current level</span>
+                </div>
               </div>
-              <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
-                <Zap className="h-3 w-3 shrink-0" />
-                <span>current level</span>
-              </div>
-            </div>
 
-            {/* Cell 4: Badges earned */}
-            <div className="p-4 sm:p-6">
-              <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
-                {earnedBadges.length}
-              </div>
-              <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
-                <Trophy className="h-3 w-3 shrink-0" />
-                <span>badges earned</span>
+              {/* Cell 4: Badges earned */}
+              <div className="p-4 sm:p-6">
+                <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
+                  {earnedBadges.length}
+                </div>
+                <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
+                  <Trophy className="h-3 w-3 shrink-0" />
+                  <span>badges earned</span>
+                </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* ── Main Grid (1 col mobile, 2 col lg+) ────────────────── */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-border border border-border rounded-[2px] mt-8 md:mt-12 overflow-hidden">
-            {/* Box 1: Activity Chart */}
+          <ScrollReveal delay={0.1} y={20}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-border border border-border rounded-[2px] mt-8 md:mt-12 overflow-hidden">
+              {/* Box 1: Activity Chart */}
             <div className="bg-bg p-5 sm:p-6">
               <div className="flex items-baseline justify-between mb-5">
                 <span className="font-mono text-xs text-muted">activity</span>
@@ -559,58 +563,61 @@ export default function Dashboard() {
               )}
             </div>
           </div>
+          </ScrollReveal>
 
           {/* ── Achievements ───────────────────────────────────────── */}
-          <div className="mt-12 pb-20">
-            <div className="flex items-baseline justify-between mb-4">
-              <span className="font-mono text-xs text-muted">
-                achievements — {earnedBadges.length} unlocked
-              </span>
-            </div>
+          <ScrollReveal delay={0.15} y={20}>
+            <div className="mt-12 pb-20">
+              <div className="flex items-baseline justify-between mb-4">
+                <span className="font-mono text-xs text-muted">
+                  achievements — {earnedBadges.length} unlocked
+                </span>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-              {earnedBadges.map((badge) => (
-                <div
-                  key={badge.id}
-                  className="flex items-center gap-3 p-3 border border-border rounded-[2px] bg-surface/30"
-                >
-                  <div className="h-7 w-7 rounded-[2px] bg-surface border border-border flex items-center justify-center shrink-0">
-                    <badge.icon className="h-4 w-4 text-text" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                {earnedBadges.map((badge) => (
+                  <div
+                    key={badge.id}
+                    className="flex items-center gap-3 p-3 border border-border rounded-[2px] bg-surface/30"
+                  >
+                    <div className="h-7 w-7 rounded-[2px] bg-surface border border-border flex items-center justify-center shrink-0">
+                      <badge.icon className="h-4 w-4 text-text" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-mono text-xs font-medium text-text truncate">
+                        {badge.name}
+                      </p>
+                      <p className="font-mono text-[11px] text-muted truncate">
+                        {badge.description}
+                      </p>
+                    </div>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-mono text-xs font-medium text-text truncate">
-                      {badge.name}
-                    </p>
-                    <p className="font-mono text-[11px] text-muted truncate">
-                      {badge.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))}
 
-              {lockedBadges.map((badge) => (
-                <div
-                  key={badge.id}
-                  className="flex items-center gap-3 p-3 border border-border/50 rounded-[2px] opacity-40"
-                >
-                  <div className="h-7 w-7 rounded-[2px] border border-border flex items-center justify-center shrink-0">
-                    <badge.icon className="h-4 w-4 text-muted" />
+                {lockedBadges.map((badge) => (
+                  <div
+                    key={badge.id}
+                    className="flex items-center gap-3 p-3 border border-border/50 rounded-[2px] opacity-40"
+                  >
+                    <div className="h-7 w-7 rounded-[2px] border border-border flex items-center justify-center shrink-0">
+                      <badge.icon className="h-4 w-4 text-muted" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-mono text-xs text-muted truncate">
+                        {badge.name}
+                      </p>
+                      <p className="font-mono text-[11px] text-muted truncate">
+                        {badge.description}
+                      </p>
+                    </div>
+                    <span className="font-mono text-[10px] text-muted uppercase tracking-wider shrink-0 border border-border px-1 py-0.5 rounded-[2px]">
+                      locked
+                    </span>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="font-mono text-xs text-muted truncate">
-                      {badge.name}
-                    </p>
-                    <p className="font-mono text-[11px] text-muted truncate">
-                      {badge.description}
-                    </p>
-                  </div>
-                  <span className="font-mono text-[10px] text-muted uppercase tracking-wider shrink-0 border border-border px-1 py-0.5 rounded-[2px]">
-                    locked
-                  </span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </>

@@ -1,5 +1,6 @@
 import { TerminalWindow } from "../components/home/TerminalWindow";
 import { HomeSections } from "../components/home/HomeSections";
+import { ScrollReveal } from "../components/ui/ScrollReveal";
 
 export default function Home() {
   return (
@@ -60,104 +61,108 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-end">
             {/* HERO LEFT */}
             <div className="lg:col-span-5 max-w-[52ch] flex flex-col justify-end pb-3">
-              <h1
-                className="font-medium tracking-tight leading-[1.15] mb-3 text-balance"
-                style={{
-                  fontSize: "clamp(1.5rem, 2.5vw, 2.125rem)",
-                  color: "var(--text)",
-                }}
-              >
-                The structured way into the stack you want to master.
-              </h1>
-
-              <p
-                className="leading-relaxed mb-6 font-normal font-sans"
-                style={{
-                  fontSize: "18px",
-                  color: "color-mix(in srgb, var(--text) 88%, transparent)",
-                }}
-              >
-                Roadmaps for languages and CS fundamentals. Track progress, keep a daily TIL log, and learn from curated resources.
-              </p>
-
-              {/* Command-style CTA bar */}
-              <div className="flex flex-col gap-2.5 font-mono">
-                <div
-                  className="flex items-center justify-between"
+              <ScrollReveal delay={0.05} y={16}>
+                <h1
+                  className="font-medium tracking-tight leading-[1.15] mb-3 text-balance"
                   style={{
-                    height: "40px",
-                    padding: "0 14px",
-                    borderRadius: "2px",
-                    border: "1px solid var(--border)",
-                    background: "color-mix(in srgb, var(--surface) 90%, transparent)",
-                    maxWidth: "420px",
+                    fontSize: "clamp(1.5rem, 2.5vw, 2.125rem)",
+                    color: "var(--text)",
                   }}
                 >
-                  <div className="flex items-center gap-2" style={{ color: "var(--text)" }}>
-                    <span className="font-bold" style={{ color: "var(--accent)", fontSize: "12px" }}>
-                      $
-                    </span>
-                    <span style={{ fontSize: "12px", letterSpacing: "0.04em" }}>
-                      open roadmaps
-                    </span>
-                  </div>
-                  <a
-                    href="/languages"
-                    className="flex items-center gap-1 font-bold"
-                    style={{
-                      fontSize: "12px",
-                      padding: "4px 10px",
-                      borderRadius: "2px",
-                      background: "var(--accent)",
-                      color: "var(--on-accent)",
-                      textDecoration: "none",
-                      letterSpacing: "-0.01em",
-                    }}
-                  >
-                    Open &rarr;
-                  </a>
-                </div>
+                  The structured way into the stack you want to master.
+                </h1>
 
-                {/* Trust line */}
                 <p
-                  className="font-mono"
-                  style={{ fontSize: "11px", color: "var(--muted)", letterSpacing: "-0.01em" }}
+                  className="leading-relaxed mb-6 font-normal font-sans"
+                  style={{
+                    fontSize: "18px",
+                    color: "color-mix(in srgb, var(--text) 88%, transparent)",
+                  }}
                 >
-                  Free &bull; Open source &bull; Progress saves in your browser, no signup
+                  Roadmaps for languages and CS fundamentals. Track progress, keep a daily TIL log, and learn from curated resources.
                 </p>
 
-                {/* Quick-jump links */}
-                <div
-                  className="flex items-center gap-3"
-                  style={{ fontSize: "12px", color: "var(--muted)" }}
-                >
-                  <span style={{ fontSize: "11px", color: "color-mix(in srgb, var(--muted) 70%, transparent)" }}>
-                    quick jump:
-                  </span>
-                  <a
-                    href="/languages"
-                    style={{ color: "inherit", textDecoration: "none" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+                {/* Command-style CTA bar */}
+                <div className="flex flex-col gap-2.5 font-mono">
+                  <div
+                    className="flex items-center justify-between"
+                    style={{
+                      height: "40px",
+                      padding: "0 14px",
+                      borderRadius: "2px",
+                      border: "1px solid var(--border)",
+                      background: "color-mix(in srgb, var(--surface) 90%, transparent)",
+                      maxWidth: "420px",
+                    }}
                   >
-                    Languages
-                  </a>
-                  <span style={{ color: "var(--border)" }}>/</span>
-                  <a
-                    href="/cs-core"
-                    style={{ color: "inherit", textDecoration: "none" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+                    <div className="flex items-center gap-2" style={{ color: "var(--text)" }}>
+                      <span className="font-bold" style={{ color: "var(--accent)", fontSize: "12px" }}>
+                        $
+                      </span>
+                      <span style={{ fontSize: "12px", letterSpacing: "0.04em" }}>
+                        open roadmaps
+                      </span>
+                    </div>
+                    <a
+                      href="/languages"
+                      className="flex items-center gap-1 font-bold"
+                      style={{
+                        fontSize: "12px",
+                        padding: "4px 10px",
+                        borderRadius: "2px",
+                        background: "var(--accent)",
+                        color: "var(--on-accent)",
+                        textDecoration: "none",
+                        letterSpacing: "-0.01em",
+                      }}
+                    >
+                      Open &rarr;
+                    </a>
+                  </div>
+
+                  {/* Trust line */}
+                  <p
+                    className="font-mono"
+                    style={{ fontSize: "11px", color: "var(--muted)", letterSpacing: "-0.01em" }}
                   >
-                    CS Core
-                  </a>
+                    Free &bull; Open source &bull; Progress saves in your browser, no signup
+                  </p>
+
+                  {/* Quick-jump links */}
+                  <div
+                    className="flex items-center gap-3"
+                    style={{ fontSize: "12px", color: "var(--muted)" }}
+                  >
+                    <span style={{ fontSize: "11px", color: "color-mix(in srgb, var(--muted) 70%, transparent)" }}>
+                      quick jump:
+                    </span>
+                    <a
+                      href="/languages"
+                      style={{ color: "inherit", textDecoration: "none" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+                    >
+                      Languages
+                    </a>
+                    <span style={{ color: "var(--border)" }}>/</span>
+                    <a
+                      href="/cs-core"
+                      style={{ color: "inherit", textDecoration: "none" }}
+                      onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.color = "var(--muted)")}
+                    >
+                      CS Core
+                    </a>
+                  </div>
                 </div>
-              </div>
+              </ScrollReveal>
             </div>
 
-            {/* HERO RIGHT: Terminal Window (unchanged) */}
+            {/* HERO RIGHT: Terminal Window */}
             <div className="lg:col-span-7 flex justify-end lg:-mr-6 xl:-mr-12 lg:pt-14">
-              <TerminalWindow />
+              <ScrollReveal delay={0.15} y={24} className="w-full flex justify-end">
+                <TerminalWindow />
+              </ScrollReveal>
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, LogIn, LogOut, LayoutDashboard, Search } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
 import {
   DropdownMenu,
@@ -17,8 +16,15 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { user, signInWithGithub, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
 
-  // Scroll listener for sticky solid background after 24px
+  // Automatically close mobile menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  // Scroll listener for sticky solid background after 24px (only needed on home)
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 24);
@@ -27,18 +33,6 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Prevent scrolling when mobile full-screen menu is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
 
   const navLinks = [
     { to: "/languages", label: "Languages" },
@@ -63,7 +57,7 @@ export function Navbar() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 w-full transition-colors duration-150 ${
-        scrolled
+        !isHome || scrolled
           ? "bg-bg border-b border-border"
           : "bg-transparent border-b-0"
       }`}
@@ -207,115 +201,110 @@ export function Navbar() {
       </div>
 
       {/* Mobile Full-Screen Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="fixed inset-0 z-50 lg:hidden bg-bg flex flex-col justify-between p-6"
-          >
-            <div>
-              <div className="flex items-center justify-between border-b border-border pb-4 mb-6">
-                <span className="font-mono text-base font-bold uppercase tracking-tight text-text">
-                  DEVMAP
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setIsOpen(false)}
-                  className="p-2 rounded-[2px] border border-border text-muted hover:text-text"
-                  aria-label="Close menu"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              <nav className="flex flex-col gap-4 font-mono">
-                {navLinks.map((link) => (
-                  <NavLink
-                    key={link.to}
-                    to={link.to}
-                    onClick={() => setIsOpen(false)}
-                    className={({ isActive }) =>
-                      `text-base py-2 border-b border-border/60 tracking-wide transition-colors ${
-                        isActive
-                          ? "text-accent font-semibold"
-                          : "text-muted hover:text-text"
-                      }`
-                    }
-                  >
-                    {link.label}
-                  </NavLink>
-                ))}
-              </nav>
-            </div>
-
-            <div className="border-t border-border pt-6 flex flex-col gap-4 font-mono">
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-[60] lg:hidden bg-bg flex flex-col justify-between p-6 overscroll-contain overflow-y-auto"
+          style={{ backgroundColor: "var(--bg)" }}
+        >
+          <div>
+            <div className="flex items-center justify-between border-b border-border pb-4 mb-6">
+              <span className="font-mono text-base font-bold uppercase tracking-tight text-text">
+                DEVMAP
+              </span>
               <button
                 type="button"
-                onClick={() => {
-                  setIsOpen(false);
-                  openCommandPalette();
-                }}
-                className="w-full flex items-center justify-between px-3 py-2.5 rounded-[2px] border border-border bg-surface text-muted text-xs"
+                onClick={() => setIsOpen(false)}
+                className="p-2 rounded-[2px] border border-border text-muted hover:text-text cursor-pointer"
+                aria-label="Close menu"
               >
-                <span className="flex items-center gap-2">
-                  <Search className="h-4 w-4" /> Search command palette
-                </span>
-                <kbd className="text-[10px] border border-border px-1.5 py-0.5 rounded-[2px]">
-                  ⌘K
-                </kbd>
+                <X className="h-5 w-5" />
               </button>
+            </div>
 
-              {user ? (
-                <div className="flex items-center justify-between px-2 py-1">
-                  <div className="flex items-center gap-3">
-                    {user.user_metadata?.avatar_url && (
-                      <img
-                        src={user.user_metadata.avatar_url}
-                        alt="Avatar"
-                        className="h-8 w-8 rounded-[2px] object-cover"
-                      />
-                    )}
-                    <div>
-                      <p className="text-xs font-semibold text-text">
-                        {user.user_metadata?.full_name || "Developer"}
-                      </p>
-                      <p className="text-[10px] text-muted truncate max-w-[180px]">
-                        {user.email}
-                      </p>
-                    </div>
+            <nav className="flex flex-col gap-4 font-mono">
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `text-base py-2 border-b border-border/60 tracking-wide transition-colors ${
+                      isActive
+                        ? "text-accent font-semibold"
+                        : "text-muted hover:text-text"
+                    }`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+
+          <div className="border-t border-border pt-6 flex flex-col gap-4 font-mono">
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpen(false);
+                openCommandPalette();
+              }}
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-[2px] border border-border bg-surface text-muted text-xs cursor-pointer"
+            >
+              <span className="flex items-center gap-2">
+                <Search className="h-4 w-4" /> Search command palette
+              </span>
+              <kbd className="text-[10px] border border-border px-1.5 py-0.5 rounded-[2px]">
+                ⌘K
+              </kbd>
+            </button>
+
+            {user ? (
+              <div className="flex items-center justify-between px-2 py-1">
+                <div className="flex items-center gap-3">
+                  {user.user_metadata?.avatar_url && (
+                    <img
+                      src={user.user_metadata.avatar_url}
+                      alt="Avatar"
+                      className="h-8 w-8 rounded-[2px] object-cover"
+                    />
+                  )}
+                  <div>
+                    <p className="text-xs font-semibold text-text">
+                      {user.user_metadata?.full_name || "Developer"}
+                    </p>
+                    <p className="text-[10px] text-muted truncate max-w-[180px]">
+                      {user.email}
+                    </p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsOpen(false);
-                      handleSignOut();
-                    }}
-                    className="p-2 border border-border rounded-[2px] text-muted hover:text-text"
-                    title="Sign out"
-                  >
-                    <LogOut className="h-4 w-4" />
-                  </button>
                 </div>
-              ) : (
                 <button
                   type="button"
                   onClick={() => {
                     setIsOpen(false);
-                    signInWithGithub();
+                    handleSignOut();
                   }}
-                  className="w-full py-2.5 rounded-[2px] border border-accent bg-accent text-on-accent text-xs font-mono font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                  className="p-2 border border-border rounded-[2px] text-muted hover:text-text cursor-pointer"
+                  title="Sign out"
                 >
-                  <LogIn className="h-4 w-4" />
-                  Sign in with GitHub
+                  <LogOut className="h-4 w-4" />
                 </button>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOpen(false);
+                  signInWithGithub();
+                }}
+                className="w-full py-2.5 rounded-[2px] border border-accent bg-accent text-on-accent text-xs font-mono font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <LogIn className="h-4 w-4" />
+                Sign in with GitHub
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

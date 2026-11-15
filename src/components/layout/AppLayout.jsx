@@ -36,15 +36,17 @@ export function AppLayout() {
 
   return (
     <div className="relative flex min-h-screen flex-col bg-bg font-sans antialiased text-text selection:bg-accent selection:text-on-accent">
-      {/* Fixed top scrim behind navbar (z-40, below nav z-50, above background): ensures high contrast over clouds */}
-      <div
-        className="fixed top-0 left-0 right-0 h-[140px] pointer-events-none z-40"
-        style={{
-          background:
-            "linear-gradient(to bottom, color-mix(in srgb, var(--bg) 85%, transparent) 0%, color-mix(in srgb, var(--bg) 45%, transparent) 55%, transparent 100%)",
-        }}
-        aria-hidden="true"
-      />
+      {/* Fixed top scrim behind navbar (z-40, below nav z-50, above background): ONLY ON HOME over the hero artwork */}
+      {isHome && (
+        <div
+          className="fixed top-0 left-0 right-0 h-[140px] pointer-events-none z-40"
+          style={{
+            background:
+              "linear-gradient(to bottom, color-mix(in srgb, var(--bg) 85%, transparent) 0%, color-mix(in srgb, var(--bg) 45%, transparent) 55%, transparent 100%)",
+          }}
+          aria-hidden="true"
+        />
+      )}
 
       <Navbar />
 

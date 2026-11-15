@@ -12,6 +12,7 @@ import { csCoreRoadmaps } from "../data/csCore";
 import { PageHeader }     from "../components/home/PageHeader";
 import { TrackToolbar }   from "../components/home/TrackToolbar";
 import { TrackTable, TrackEmptyState } from "../components/home/TrackTable";
+import { ScrollReveal } from "../components/ui/ScrollReveal";
 
 // Container matches navbar/footer: max-w-[1440px], px-6
 const CONTAINER = "w-full max-w-[1440px] mx-auto px-6";
@@ -36,31 +37,35 @@ export default function CSCore() {
       style={{ background: "var(--bg)", color: "var(--text)" }}
     >
       <div className={CONTAINER}>
-        <PageHeader
-          path="~/cs-core"
-          title="CS Core"
-          description="Fundamentals underneath every language: algorithms, operating systems, networks, databases, system design, architecture, and ML."
-        />
+        <ScrollReveal y={16}>
+          <PageHeader
+            path="~/cs-core"
+            title="CS Core"
+            description="Fundamentals underneath every language: algorithms, operating systems, networks, databases, system design, architecture, and ML."
+          />
+        </ScrollReveal>
 
-        <TrackToolbar
-          search={search}
-          onSearchChange={setSearch}
-          /* no categories — search only on this page */
-        />
-
-        {filteredTracks.length === 0 ? (
-          <TrackEmptyState
+        <ScrollReveal delay={0.08} y={20}>
+          <TrackToolbar
             search={search}
-            onClear={() => setSearch("")}
+            onSearchChange={setSearch}
+            /* no categories — search only on this page */
           />
-        ) : (
-          <TrackTable
-            tracks={filteredTracks}
-            showOrder
-            showTags
-            /* no progressMap — CS Core has no progress tracking yet */
-          />
-        )}
+
+          {filteredTracks.length === 0 ? (
+            <TrackEmptyState
+              search={search}
+              onClear={() => setSearch("")}
+            />
+          ) : (
+            <TrackTable
+              tracks={filteredTracks}
+              showOrder
+              showTags
+              /* no progressMap — CS Core has no progress tracking yet */
+            />
+          )}
+        </ScrollReveal>
 
         <div style={{ height: "80px" }} />
       </div>

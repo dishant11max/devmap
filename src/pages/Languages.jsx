@@ -13,6 +13,7 @@ import { supabase } from "../lib/supabase";
 import { PageHeader }   from "../components/home/PageHeader";
 import { TrackToolbar } from "../components/home/TrackToolbar";
 import { TrackTable, TrackEmptyState } from "../components/home/TrackTable";
+import { ScrollReveal } from "../components/ui/ScrollReveal";
 
 // Container matches navbar/footer: max-w-[1440px], px-6
 const CONTAINER = "w-full max-w-[1440px] mx-auto px-6";
@@ -106,33 +107,37 @@ export default function Languages() {
       style={{ background: "var(--bg)", color: "var(--text)" }}
     >
       <div className={CONTAINER}>
-        <PageHeader
-          path="~/languages"
-          title="Languages"
-          description={`${languages.length} language roadmaps. Pick one and start at step one.`}
-          meta={`${totalSteps} steps total`}
-        />
-
-        <TrackToolbar
-          categories={categories}
-          allTracks={languages}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          search={search}
-          onSearchChange={setSearch}
-        />
-
-        {filteredLanguages.length === 0 ? (
-          <TrackEmptyState
-            search={search || selectedCategory}
-            onClear={clearFilters}
+        <ScrollReveal y={16}>
+          <PageHeader
+            path="~/languages"
+            title="Languages"
+            description={`${languages.length} language roadmaps. Pick one and start at step one.`}
+            meta={`${totalSteps} steps total`}
           />
-        ) : (
-          <TrackTable
-            tracks={filteredLanguages}
-            progressMap={progressMap}
+        </ScrollReveal>
+
+        <ScrollReveal delay={0.08} y={20}>
+          <TrackToolbar
+            categories={categories}
+            allTracks={languages}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            search={search}
+            onSearchChange={setSearch}
           />
-        )}
+
+          {filteredLanguages.length === 0 ? (
+            <TrackEmptyState
+              search={search || selectedCategory}
+              onClear={clearFilters}
+            />
+          ) : (
+            <TrackTable
+              tracks={filteredLanguages}
+              progressMap={progressMap}
+            />
+          )}
+        </ScrollReveal>
 
         {/* Bottom breathing room */}
         <div style={{ height: "80px" }} />
