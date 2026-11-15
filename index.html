@@ -4,7 +4,63 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <title>devmap</title>
+    <title>DevMap — Structured Developer Roadmaps &amp; Fundamentals</title>
+    <meta
+      name="description"
+      content="Visual roadmaps for languages and computer science fundamentals. Track progress, keep a daily TIL log, and learn from curated canonical resources."
+    />
+    <link rel="canonical" href="https://devmap.sh" />
+    <meta name="theme-color" content="#0d1217" />
+    <script>
+      (function () {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const urlTheme = params.get("theme");
+          const valid = ["a", "b", "c", "d", "current"];
+          if (urlTheme && valid.includes(urlTheme)) {
+            localStorage.setItem("theme", urlTheme);
+            document.documentElement.setAttribute("data-theme", urlTheme);
+          } else {
+            const saved = localStorage.getItem("theme");
+            if (saved && valid.includes(saved)) {
+              document.documentElement.setAttribute("data-theme", saved);
+            } else {
+              document.documentElement.setAttribute("data-theme", "b");
+            }
+          }
+        } catch {
+          document.documentElement.setAttribute("data-theme", "b");
+        }
+      })();
+    </script>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://devmap.sh" />
+    <meta
+      property="og:title"
+      content="DevMap — Structured Developer Roadmaps &amp; Fundamentals"
+    />
+    <meta
+      property="og:description"
+      content="Visual roadmaps for languages and computer science fundamentals. Track progress, keep a daily TIL log, and learn from curated canonical resources."
+    />
+    <meta property="og:image" content="https://devmap.sh/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://devmap.sh" />
+    <meta
+      name="twitter:title"
+      content="DevMap — Structured Developer Roadmaps &amp; Fundamentals"
+    />
+    <meta
+      name="twitter:description"
+      content="Visual roadmaps for languages and computer science fundamentals. Track progress, keep a daily TIL log, and learn from curated canonical resources."
+    />
+    <meta name="twitter:image" content="https://devmap.sh/og-image.jpg" />
   </head>
   <body>
     <div id="root"></div>

@@ -1,25 +1,31 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { Share2, Zap, Target, Trophy, ArrowRight, Check, Map } from "lucide-react";
-import { AchievementBadges } from "../components/dashboard/AchievementBadges";
-import { AnimatedFlame } from "../components/dashboard/AnimatedFlame";
+import {
+  Share2,
+  Zap,
+  Target,
+  Trophy,
+  Check,
+  Map,
+  ChevronRight,
+} from "lucide-react";
+import { useBadges } from "../hooks/useBadges";
 import { languages } from "../data/languages";
 import { csCoreRoadmaps } from "../data/csCore";
 import { roadmaps } from "../data/roadmaps";
-import { Button } from "../components/ui/Button";
-
-const allTracks = [...languages, ...csCoreRoadmaps];
 import {
   ResponsiveContainer,
   BarChart,
   Bar,
   Cell,
-  XAxis,
   Tooltip,
 } from "recharts";
 import { supabase } from "../lib/supabase";
 import { useUserProfile } from "../hooks/useUserProfile";
+
+const CONTAINER = "w-full max-w-[1440px] mx-auto px-6";
+const allTracks = [...languages, ...csCoreRoadmaps];
 
 const getAllProgress = () => {
   const allProgress = {};
@@ -76,7 +82,7 @@ export default function Dashboard() {
   const [progressData, setProgressData] = useState({});
   const [totalCompletedNodes, setTotalCompletedNodes] = useState(0);
   const [contributionData, setContributionData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [_isLoading, setIsLoading] = useState(true);
   const [level, setLevel] = useState(1);
   const [xp, setXp] = useState(0);
   const [recentActivity, setRecentActivity] = useState([]);
@@ -195,7 +201,6 @@ export default function Dashboard() {
     };
   }, [user]);
 
-  // Derived data
   const displayLevel = level;
   const displayXp = xp;
 
@@ -207,17 +212,6 @@ export default function Dashboard() {
     .filter((l) => progressData[l.id]?.completed > 0)
     .sort((a, b) => progressData[b.id].completed - progressData[a.id].completed);
 
-  const badgesEarned = [
-    totalCompletedNodes >= 1,
-    totalCompletedNodes > 0,
-    totalCompletedNodes >= 10,
-    roadmapsStarted >= 3,
-    Object.values(progressData).filter((p) => p.completed >= p.total).length >=
-      1,
-    displayLevel >= 5,
-  ].filter(Boolean).length;
-
-  // Weekly chart data
   const weeklyData = [];
   let currentWeek = { date: "", count: 0 };
   contributionData.forEach((day, i) => {
@@ -234,138 +228,139 @@ export default function Dashboard() {
     original: d,
   }));
 
+  const badgeStats = useMemo(
+    () => ({
+      totalCompleted: totalCompletedNodes,
+      streak: totalCompletedNodes > 0 ? 3 : 0,
+      roadmapsStarted,
+      roadmapsCompleted: Object.values(progressData).filter(
+        (p) => p.completed >= p.total,
+      ).length,
+      level: displayLevel,
+    }),
+    [totalCompletedNodes, roadmapsStarted, progressData, displayLevel],
+  );
+
+  const { earned: earnedBadges, locked: lockedBadges } = useBadges(badgeStats);
+  const displayName = user?.user_metadata?.full_name?.split(" ")[0] || "Developer";
+
   return (
-    <div className="min-h-screen bg-[#08090A] text-white py-10 selection:bg-white">
-      
+    <>
+      <style>{`
+        .dash-row-link:focus-visible {
+          outline: 2px solid var(--accent);
+          outline-offset: -1px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .dash-bar { transition: none !important; }
+        }
+      `}</style>
 
-      <div className="container mx-auto px-4 max-w-6xl relative z-10">
-        {/* HERO: Streak Section */}
-        <div className="group relative overflow-hidden rounded-2xl border border-[rgba(255,255,255,0.06)] bg-[#111213]/40 backdrop-blur-md p-8 mb-8 transition-all hover:border-[rgba(255,255,255,0.12)] hover:shadow-2xl hover:shadow-[rgba(255,255,255,0.05)]">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="min-h-screen bg-bg text-text">
+        <div className={CONTAINER}>
+          {/* ── Page Header ────────────────────────────────────────── */}
+          <div className="pt-16 pb-10 border-b border-border">
+            <div className="font-mono text-xs text-muted mb-3">
+              ~/dashboard
+            </div>
 
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative z-10">
-            <div className="flex items-center gap-8">
-              <div className="relative">
-                <div className="flex items-center gap-5">
-                  <div>
-                    <div className="text-7xl font-black tabular-nums tracking-tighter bg-gradient-to-r from-white via-white to-[#555] bg-clip-text text-transparent">
-                      {totalCompletedNodes > 0 ? 3 : 0}
-                    </div>
-                    <div className="text-xs font-bold uppercase tracking-[0.2em] text-white/90 mt-1 pl-1 flex items-center gap-2">
-                      Day Streak
-                    </div>
-                  </div>
-                </div>
+            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4">
+              <h1 className="font-sans text-3xl sm:text-4xl font-medium tracking-tight text-text">
+                {displayName}
+              </h1>
+
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs text-muted border border-border px-2 py-1 rounded-[2px] bg-surface">
+                  Lv.{displayLevel}
+                </span>
+                <span className="font-mono text-xs text-text">
+                  {displayXp.toLocaleString()} XP
+                </span>
               </div>
             </div>
 
-            <div className="flex-1 md:text-right w-full">
-              <div className="flex flex-col md:items-end">
-                <h1 className="text-2xl font-bold text-white tracking-tight">
-                  Welcome back,{" "}
-                  <span className="text-[#888]">
-                    {user?.user_metadata?.full_name?.split(" ")[0] ||
-                      "Developer"}
-                  </span>
-                </h1>
-
-                <div className="flex items-center gap-3 mt-3 text-sm font-medium bg-[rgba(255,255,255,0.06)]/50 p-1.5 pr-4 pl-2 rounded-full border border-white/5 w-fit">
-                  <div className="bg-[#111213] rounded-full px-2 py-0.5 text-xs text-[#888] border border-white/5">
-                    Lv.{displayLevel}
-                  </div>
-                  <div className="flex items-center gap-1.5 text-white">
-                    <Zap className="h-3.5 w-3.5 text-white fill-white" />
-                    {displayXp.toLocaleString()} XP
-                  </div>
-                </div>
-
-                <div className="mt-4 w-full md:max-w-xs group/progress cursor-pointer">
-                  <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-[#555] mb-1.5 group-hover/progress:text-white transition-colors">
-                    <span>Next Level</span>
-                    <span>{totalCompletedNodes % 10}/10</span>
-                  </div>
-                  <div className="h-2 bg-[rgba(255,255,255,0.06)] rounded-full overflow-hidden border border-white/5">
-                    <div
-                      className="h-full bg-gradient-to-r from-white to-white shadow-[0_0_10px_rgba(34,197,94,0.4)] transition-all duration-1000 ease-out"
-                      style={{ width: `${(totalCompletedNodes % 10) * 10}%` }}
-                    />
-                  </div>
-                </div>
+            {/* Next level progress bar */}
+            <div className="mt-5 max-w-xs">
+              <div className="flex justify-between font-mono text-xs text-muted mb-1.5">
+                <span>next level</span>
+                <span>{totalCompletedNodes % 10}/10</span>
+              </div>
+              <div className="h-1 bg-border rounded-[2px] overflow-hidden">
+                <div
+                  className="dash-bar h-full bg-accent transition-all duration-700 ease-out"
+                  style={{ width: `${(totalCompletedNodes % 10) * 10}%` }}
+                />
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          {[
-            {
-              label: "Steps Completed",
-              value: totalCompletedNodes,
-              icon: Target,
-              delay: "0",
-            },
-            {
-              label: "Roadmaps Active",
-              value: roadmapsStarted,
-              icon: Zap,
-              delay: "100",
-            },
-            {
-              label: "Badges Earned",
-              value: badgesEarned,
-              icon: Trophy,
-              delay: "200",
-            },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              className="group flex items-center justify-between p-5 border border-[rgba(255,255,255,0.06)]/60 bg-[#111213]/20 backdrop-blur-sm rounded-xl hover:bg-[rgba(255,255,255,0.06)]/40 hover:border-[rgba(255,255,255,0.12)] transition-all duration-300"
-            >
-              <div>
-                <div className="text-3xl font-bold text-white group-hover:text-white transition-colors">
-                  {stat.value}
-                </div>
-                <div className="text-xs font-medium text-[#555] uppercase tracking-wider mt-1 group-hover:text-[#888]">
-                  {stat.label}
-                </div>
+          {/* ── Stats Strip (2x2 on mobile, 4 columns on md+) ──────── */}
+          <div className="grid grid-cols-2 md:grid-cols-4 border border-border rounded-[2px] mt-8 md:mt-12 bg-surface/20 divide-y md:divide-y-0 divide-x-0 md:divide-x divide-border">
+            {/* Cell 1: Nodes completed */}
+            <div className="p-4 sm:p-6 border-r border-border md:border-r-0">
+              <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
+                {totalCompletedNodes}
               </div>
-              <div className="h-10 w-10 rounded-full bg-[#111213] border border-[rgba(255,255,255,0.06)] flex items-center justify-center text-[#555] group-hover:text-white group-hover:border-white/30 group-hover:bg-white transition-all">
-                <stat.icon className="h-5 w-5" />
+              <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
+                <Target className="h-3 w-3 shrink-0" />
+                <span>nodes completed</span>
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-          {/* Left Column (8 cols) */}
-          <div className="lg:col-span-7 space-y-8">
-            {/* Activity Chart */}
-            <div className="border border-[rgba(255,255,255,0.06)]/60 bg-[#111213]/20 backdrop-blur-sm rounded-xl p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-sm font-bold text-[#888] uppercase tracking-widest">
-                  Activity
-                </h2>
-                <div className="text-xs font-mono text-[#555] bg-[#111213]/50 px-2 py-1 rounded">
-                  Last 12 Weeks
-                </div>
+            {/* Cell 2: Tracks active */}
+            <div className="p-4 sm:p-6">
+              <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
+                {roadmapsStarted}
               </div>
+              <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
+                <Map className="h-3 w-3 shrink-0" />
+                <span>tracks active</span>
+              </div>
+            </div>
 
-              <div className="h-48 w-full">
+            {/* Cell 3: Current level */}
+            <div className="p-4 sm:p-6 border-r border-border md:border-r-0">
+              <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
+                {displayLevel}
+              </div>
+              <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
+                <Zap className="h-3 w-3 shrink-0" />
+                <span>current level</span>
+              </div>
+            </div>
+
+            {/* Cell 4: Badges earned */}
+            <div className="p-4 sm:p-6">
+              <div className="font-mono text-2xl sm:text-3xl font-medium text-text">
+                {earnedBadges.length}
+              </div>
+              <div className="font-mono text-xs text-muted mt-1 flex items-center gap-1.5">
+                <Trophy className="h-3 w-3 shrink-0" />
+                <span>badges earned</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Main Grid (1 col mobile, 2 col lg+) ────────────────── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-border border border-border rounded-[2px] mt-8 md:mt-12 overflow-hidden">
+            {/* Box 1: Activity Chart */}
+            <div className="bg-bg p-5 sm:p-6">
+              <div className="flex items-baseline justify-between mb-5">
+                <span className="font-mono text-xs text-muted">activity</span>
+                <span className="font-mono text-xs text-muted">last 12 weeks</span>
+              </div>
+              <div className="h-44 w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} barSize={24}>
+                  <BarChart data={chartData} barSize={16}>
                     <Tooltip
                       cursor={{ fill: "transparent" }}
                       content={({ active, payload }) => {
                         if (active && payload && payload.length) {
                           return (
-                            <div className="bg-[#111213] border border-[rgba(255,255,255,0.06)] p-2 rounded-lg shadow-xl text-xs">
-                              <p className="text-[#888] mb-1">
-                                {payload[0].payload.date}
-                              </p>
-                              <p className="font-bold text-white">
-                                {payload[0].value} contributions
+                            <div className="font-mono text-xs bg-surface border border-border p-2 rounded-[2px] shadow-lg">
+                              <p className="text-muted">{payload[0].payload.date}</p>
+                              <p className="text-text font-medium mt-0.5">
+                                {payload[0].payload.original?.count ?? 0} nodes
                               </p>
                             </div>
                           );
@@ -373,12 +368,11 @@ export default function Dashboard() {
                         return null;
                       }}
                     />
-                    <Bar dataKey="visualValue" radius={[4, 4, 4, 4]}>
+                    <Bar dataKey="visualValue" radius={[2, 2, 0, 0]}>
                       {chartData.map((entry, index) => (
                         <Cell
                           key={`cell-${index}`}
-                          fill={entry.count > 0 ? "#ffffff" : "#1A1A1A"}
-                          className="transition-all duration-300 hover:opacity-80"
+                          fill={entry.count > 0 ? "var(--accent)" : "var(--border)"}
                         />
                       ))}
                     </Bar>
@@ -387,30 +381,86 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Recent Activity */}
-            <div className="space-y-4">
-              <h2 className="text-sm font-bold text-[#555] uppercase tracking-widest pl-2">
-                Recent
-              </h2>
-              {recentActivity.length === 0 ? (
-                <div className="p-10 border border-dashed border-[rgba(255,255,255,0.06)] rounded-2xl text-center bg-[#111213]/10">
-                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#111213] border border-[rgba(255,255,255,0.06)]">
-                    <Zap className="h-5 w-5 text-[#555]" />
-                  </div>
-                  <h3 className="text-white font-semibold mb-1">No activity yet</h3>
-                  <p className="text-sm text-[#555] mb-5">
-                    Start learning and your activity will appear here.
-                  </p>
+            {/* Box 2: Jump Back In */}
+            <div className="bg-bg p-5 sm:p-6">
+              <div className="flex items-baseline justify-between mb-5">
+                <span className="font-mono text-xs text-muted">jump back in</span>
+                <Link
+                  to="/languages"
+                  className="font-mono text-xs text-muted hover:text-text transition-colors"
+                >
+                  all tracks →
+                </Link>
+              </div>
+
+              {inProgressRoadmaps.length === 0 ? (
+                <p className="font-mono text-xs text-muted py-6">
+                  No active tracks yet.{" "}
                   <Link
                     to="/languages"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-white hover:text-white border border-white/30 rounded-full px-4 py-2 bg-white hover:bg-white transition-all"
+                    className="text-text underline underline-offset-2 hover:text-ink transition-colors"
                   >
-                    Browse Roadmaps <ArrowRight className="h-4 w-4" />
+                    Browse tracks →
                   </Link>
+                </p>
+              ) : (
+                <div className="divide-y divide-border">
+                  {inProgressRoadmaps.slice(0, 4).map((lang) => {
+                    const p = progressData[lang.id];
+                    const percent = Math.round((p.completed / p.total) * 100);
+                    const isDone = percent === 100;
+                    return (
+                      <Link
+                        key={lang.id}
+                        to={`/roadmap/${lang.id}`}
+                        className="dash-row-link block py-3 group hover:bg-surface/40 transition-colors -mx-2 px-2 rounded-[2px]"
+                      >
+                        <div className="flex justify-between items-baseline mb-1.5">
+                          <span className="font-sans text-sm font-medium text-text group-hover:text-ink transition-colors">
+                            {lang.name}
+                          </span>
+                          <span className="font-mono text-xs text-muted">
+                            {isDone ? (
+                              <span className="text-ink">done</span>
+                            ) : (
+                              `${percent}%`
+                            )}
+                          </span>
+                        </div>
+                        <div className="h-1 bg-border rounded-[2px] overflow-hidden mb-1.5">
+                          <div
+                            className="dash-bar h-full bg-accent transition-all duration-300"
+                            style={{ width: `${percent}%` }}
+                          />
+                        </div>
+                        <div className="font-mono text-xs text-muted">
+                          {p.completed} / {p.total} nodes
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
+              )}
+            </div>
+
+            {/* Box 3: Recent Activity */}
+            <div className="bg-bg p-5 sm:p-6">
+              <span className="font-mono text-xs text-muted block mb-5">
+                recent
+              </span>
+
+              {recentActivity.length === 0 ? (
+                <p className="font-mono text-xs text-muted py-6">
+                  No activity yet.{" "}
+                  <Link
+                    to="/languages"
+                    className="text-text underline underline-offset-2 hover:text-ink transition-colors"
+                  >
+                    Start a track →
+                  </Link>
+                </p>
               ) : (
                 (() => {
-                  // Group activity by language + date
                   const grouped = {};
                   recentActivity.forEach((act) => {
                     const day = act.date.split("T")[0];
@@ -423,29 +473,31 @@ export default function Dashboard() {
                   const groupedList = Object.values(grouped)
                     .sort((a, b) => new Date(b.date) - new Date(a.date))
                     .slice(0, 5);
+
                   return (
-                    <div className="space-y-3">
+                    <div className="divide-y divide-border">
                       {groupedList.map((act, i) => (
                         <div
                           key={i}
-                          className="group flex items-center justify-between p-4 bg-[#111213]/30 border border-[rgba(255,255,255,0.06)]/60 rounded-xl hover:border-[rgba(255,255,255,0.12)] hover:bg-[#111213]/60 transition-all"
+                          className="flex items-center justify-between py-2.5 gap-3"
                         >
-                          <div className="flex items-center gap-4">
-                            <div className="h-8 w-8 rounded-full bg-white border border-white/20 flex items-center justify-center text-white">
-                              <Check className="h-4 w-4" />
-                            </div>
-                            <div>
-                              <div className="text-sm font-medium text-white group-hover:text-white transition-colors">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <Check className="h-3.5 w-3.5 text-muted shrink-0" />
+                            <div className="min-w-0">
+                              <p className="font-sans text-sm text-text truncate">
                                 {act.language}
-                              </div>
-                              <div className="text-xs text-[#555]">
-                                Completed {act.count} step{act.count > 1 ? "s" : ""}
-                              </div>
+                              </p>
+                              <p className="font-mono text-xs text-muted">
+                                {act.count} node{act.count > 1 ? "s" : ""} completed
+                              </p>
                             </div>
                           </div>
-                          <div className="text-xs font-mono text-[#555]">
-                            {new Date(act.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
-                          </div>
+                          <span className="font-mono text-xs text-muted shrink-0">
+                            {new Date(act.date).toLocaleDateString(undefined, {
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -453,128 +505,114 @@ export default function Dashboard() {
                 })()
               )}
             </div>
-          </div>
 
-          {/* Right Column (4 cols) */}
-          <div className="lg:col-span-5 space-y-8">
-            {/* Continue Learning */}
-            <div className="border border-[rgba(255,255,255,0.06)]/60 bg-[#111213]/20 backdrop-blur-sm rounded-xl p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-sm font-bold text-[#888] uppercase tracking-widest">
-                  Jump Back In
-                </h2>
-                <Link
-                  to="/languages"
-                  className="text-xs text-white hover:text-white font-medium"
-                >
-                  View All
-                </Link>
-              </div>
+            {/* Box 4: Quick Links */}
+            <div className="bg-bg p-5 sm:p-6 flex flex-col justify-between">
+              <div>
+                <span className="font-mono text-xs text-muted block mb-5">
+                  quick links
+                </span>
 
-              {inProgressRoadmaps.length === 0 ? (
-                <div className="text-center py-8">
-                  <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-[#111213] border border-[rgba(255,255,255,0.06)]">
-                    <Map className="h-4 w-4 text-[#555]" />
-                  </div>
-                  <p className="text-sm text-[#555] mb-4">
-                    No active roadmaps yet
-                  </p>
+                <div className="space-y-2">
+                  <Link
+                    to="/til"
+                    className="dash-row-link flex items-center justify-between p-3 border border-border rounded-[2px] font-mono text-xs text-text hover:bg-surface hover:text-ink transition-colors"
+                  >
+                    <span>TIL log</span>
+                    <ChevronRight className="h-3.5 w-3.5 text-muted" />
+                  </Link>
+
                   <Link
                     to="/languages"
-                    className="inline-flex items-center gap-2 text-xs font-medium text-white hover:text-white border border-white/30 rounded-full px-3 py-1.5 bg-white hover:bg-white transition-all"
+                    className="dash-row-link flex items-center justify-between p-3 border border-border rounded-[2px] font-mono text-xs text-text hover:bg-surface hover:text-ink transition-colors"
                   >
-                    Browse Library <ArrowRight className="h-3.5 w-3.5" />
+                    <span>Languages</span>
+                    <ChevronRight className="h-3.5 w-3.5 text-muted" />
+                  </Link>
+
+                  <Link
+                    to="/cs-core"
+                    className="dash-row-link flex items-center justify-between p-3 border border-border rounded-[2px] font-mono text-xs text-text hover:bg-surface hover:text-ink transition-colors"
+                  >
+                    <span>CS Core</span>
+                    <ChevronRight className="h-3.5 w-3.5 text-muted" />
                   </Link>
                 </div>
-              ) : (
-                <div className="space-y-5">
-                  {inProgressRoadmaps.slice(0, 3).map((lang) => {
-                    const p = progressData[lang.id];
-                    const percent = Math.round((p.completed / p.total) * 100);
-                    return (
-                      <Link
-                        key={lang.id}
-                        to={`/roadmap/${lang.id}`}
-                        className="block group"
-                      >
-                        <div className="flex justify-between items-baseline text-xs font-medium mb-1.5">
-                          <span className="text-white group-hover:text-white transition-colors">
-                            {lang.name}
-                          </span>
-                          <span className="text-white">
-                            {percent}%
-                          </span>
-                        </div>
-                        <div className="h-1.5 bg-[rgba(255,255,255,0.06)] rounded-full overflow-hidden mb-1">
-                          <div
-                            className="h-full bg-white shadow-[0_0_8px_rgba(34,197,94,0.3)] group-hover:brightness-110 transition-all duration-300"
-                            style={{ width: `${percent}%` }}
-                          />
-                        </div>
-                        <div className="text-[10px] text-[#555] group-hover:text-[#555] transition-colors">
-                          Step {p.completed} of {p.total}
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-            {/* Badges */}
-            <div className="border border-[rgba(255,255,255,0.06)]/60 bg-[#111213]/20 backdrop-blur-sm rounded-xl p-6">
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-sm font-bold text-[#888] uppercase tracking-widest">
-                  Achievements
-                </h2>
               </div>
-              <AchievementBadges
-                stats={{
-                  totalCompleted: totalCompletedNodes,
-                  streak: totalCompletedNodes > 0 ? 3 : 0,
-                  roadmapsStarted: roadmapsStarted,
-                  roadmapsCompleted: Object.values(progressData).filter(
-                    (p) => p.completed >= p.total,
-                  ).length,
-                  level: displayLevel,
-                }}
-              />
-            </div>
 
-            {/* Quick Actions */}
-            <div className="grid grid-cols-2 gap-3">
-              <Button
-                asChild
-                variant="outline"
-                className="h-12 border-[rgba(255,255,255,0.06)] bg-[#111213]/50 hover:bg-[rgba(255,255,255,0.06)] hover:text-white hover:border-[rgba(255,255,255,0.12)]"
-              >
-                <Link to="/til">
-                  <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-white" />
-                    <span>TIL</span>
-                  </div>
-                </Link>
-              </Button>
               {user && profile?.username && (
-                <Button
-                  variant="outline"
-                  className="h-12 border-[rgba(255,255,255,0.06)] bg-[#111213]/50 hover:bg-[rgba(255,255,255,0.06)] hover:text-white hover:border-[rgba(255,255,255,0.12)]"
+                <button
+                  type="button"
                   onClick={() => {
                     const url = `${window.location.origin}/u/${profile.username}`;
                     navigator.clipboard.writeText(url);
                     alert(`Profile link copied!\n${url}`);
                   }}
+                  className="dash-row-link mt-4 flex items-center justify-between p-3 border border-border rounded-[2px] font-mono text-xs text-text hover:bg-surface hover:text-ink transition-colors cursor-pointer text-left w-full"
                 >
-                  <div className="flex items-center gap-2">
-                    <Share2 className="h-4 w-4 text-white" />
-                    <span>Share</span>
-                  </div>
-                </Button>
+                  <span className="flex items-center gap-2">
+                    <Share2 className="h-3.5 w-3.5 text-muted" />
+                    <span>Copy public profile link</span>
+                  </span>
+                  <ChevronRight className="h-3.5 w-3.5 text-muted" />
+                </button>
               )}
+            </div>
+          </div>
+
+          {/* ── Achievements ───────────────────────────────────────── */}
+          <div className="mt-12 pb-20">
+            <div className="flex items-baseline justify-between mb-4">
+              <span className="font-mono text-xs text-muted">
+                achievements — {earnedBadges.length} unlocked
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+              {earnedBadges.map((badge) => (
+                <div
+                  key={badge.id}
+                  className="flex items-center gap-3 p-3 border border-border rounded-[2px] bg-surface/30"
+                >
+                  <div className="h-7 w-7 rounded-[2px] bg-surface border border-border flex items-center justify-center shrink-0">
+                    <badge.icon className="h-4 w-4 text-text" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-mono text-xs font-medium text-text truncate">
+                      {badge.name}
+                    </p>
+                    <p className="font-mono text-[11px] text-muted truncate">
+                      {badge.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+              {lockedBadges.map((badge) => (
+                <div
+                  key={badge.id}
+                  className="flex items-center gap-3 p-3 border border-border/50 rounded-[2px] opacity-40"
+                >
+                  <div className="h-7 w-7 rounded-[2px] border border-border flex items-center justify-center shrink-0">
+                    <badge.icon className="h-4 w-4 text-muted" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-mono text-xs text-muted truncate">
+                      {badge.name}
+                    </p>
+                    <p className="font-mono text-[11px] text-muted truncate">
+                      {badge.description}
+                    </p>
+                  </div>
+                  <span className="font-mono text-[10px] text-muted uppercase tracking-wider shrink-0 border border-border px-1 py-0.5 rounded-[2px]">
+                    locked
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

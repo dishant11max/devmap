@@ -1,10 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Component, Map, Menu, X, LogIn, LogOut, User } from "lucide-react";
-
+import { Menu, X, LogIn, LogOut, LayoutDashboard, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../context/AuthContext";
-import { Button } from "../ui/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,10 +14,31 @@ import {
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { user, signInWithGithub, signOut } = useAuth();
   const navigate = useNavigate();
 
-  const toggleMenu = () => setIsOpen(!isOpen);
+  // Scroll listener for sticky solid background after 24px
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 24);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Prevent scrolling when mobile full-screen menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   const navLinks = [
     { to: "/languages", label: "Languages" },
@@ -35,103 +54,151 @@ export function Navbar() {
     navigate("/");
   };
 
+  const openCommandPalette = () => {
+    document.dispatchEvent(
+      new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
+    );
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container relative flex h-16 items-center justify-between">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 w-full transition-colors duration-150 ${
+        scrolled
+          ? "bg-bg border-b border-border"
+          : "bg-transparent border-b-0"
+      }`}
+    >
+      <div className="w-full max-w-[1440px] mx-auto px-6 h-16 flex items-center justify-between">
+        {/* Wordmark */}
         <div className="flex items-center">
-          <Link to="/" className="flex items-center space-x-2">
-            <Map className="h-6 w-6 text-primary" />
-            <span className="font-bold text-lg hidden sm:inline-block">
-              DevMap
-            </span>
+          <Link
+            to="/"
+            className="font-mono text-base font-bold tracking-tight text-text hover:text-ink transition-colors uppercase"
+          >
+            DEVMAP
           </Link>
         </div>
 
-        {/* Desktop Navigation - Centered */}
-        <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 transform items-center gap-8 md:flex">
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={({ isActive }) =>
-                isActive
-                  ? "relative text-sm font-semibold text-white after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:bg-white after:rounded-full"
-                  : "text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-              }
-            >
-              {link.label}
-            </NavLink>
-          ))}
-        </nav>
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center gap-6">
+          <nav className="flex items-center gap-6">
+            {navLinks.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                className={({ isActive }) =>
+                  `relative font-mono text-[14px] tracking-wide transition-colors ${
+                    isActive
+                      ? "text-text font-medium after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-[1px] after:bg-accent"
+                      : "text-muted hover:text-text"
+                  }`
+                }
+              >
+                {link.label}
+              </NavLink>
+            ))}
+          </nav>
 
-        <div className="flex items-center gap-4">
-          {/* Cmd+K Hint */}
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md border border-[rgba(255,255,255,0.06)] bg-[#111213] text-[#555] select-none hover:border-[rgba(255,255,255,0.12)] hover:text-[#888] transition-colors cursor-pointer" onClick={() => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))}>
-            <span className="text-xs">Search...</span>
-            <kbd className="text-[10px] font-mono border border-[rgba(255,255,255,0.1)] rounded px-1.5 py-0.5">⌘K</kbd>
-          </div>
+          {/* Search Pill */}
+          <button
+            type="button"
+            onClick={openCommandPalette}
+            className="flex items-center gap-2 h-8 px-2.5 rounded-[2px] border border-border bg-surface text-muted text-xs font-mono hover:border-muted hover:text-text transition-all cursor-pointer"
+            aria-label="Open command palette"
+          >
+            <Search className="h-3 w-3" />
+            <span className="text-[12px]">Search</span>
+            <kbd className="text-[10px] bg-bg border border-border px-1 py-0.5 rounded-[2px]">
+              ⌘K
+            </kbd>
+          </button>
 
-          {/* Auth Button (Desktop) */}
-          <div className="hidden md:block">
+          {/* User Chip */}
+          <div className="flex items-center">
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    className="relative h-9 w-9 rounded-full overflow-hidden bg-secondary/50 border border-border p-0"
+                  <button
+                    type="button"
+                    className="flex items-center gap-2 h-8 px-2.5 rounded-[2px] border border-border bg-surface text-text font-mono text-xs hover:border-muted hover:text-ink transition-all cursor-pointer outline-none"
                   >
                     {user.user_metadata?.avatar_url ? (
                       <img
                         src={user.user_metadata.avatar_url}
                         alt={user.user_metadata?.full_name || "User"}
-                        className="h-full w-full object-cover"
+                        className="h-4 w-4 rounded-[2px] object-cover"
                       />
                     ) : (
-                      <span className="font-bold text-xs">
+                      <span className="h-4 w-4 rounded-[2px] bg-border flex items-center justify-center text-[10px] font-bold">
                         {(user.email?.[0] || "U").toUpperCase()}
                       </span>
                     )}
-                  </Button>
+                    <span className="max-w-[110px] truncate text-xs">
+                      {user.user_metadata?.user_name ||
+                        user.user_metadata?.full_name ||
+                        user.email?.split("@")[0]}
+                    </span>
+                  </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
+                <DropdownMenuContent
+                  className="w-56 rounded-[2px] border border-border bg-surface p-1 font-mono text-xs shadow-xl"
+                  align="end"
+                  forceMount
+                >
+                  <DropdownMenuLabel className="font-normal px-2 py-2">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {user.user_metadata.full_name || "Developer"}
+                      <p className="text-xs font-semibold text-text leading-none truncate">
+                        {user.user_metadata?.full_name || "Developer"}
                       </p>
-                      <p className="text-xs leading-none text-muted-foreground">
+                      <p className="text-[11px] leading-none text-muted truncate">
                         {user.email}
                       </p>
                     </div>
                   </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate("/dashboard")}>
-                    <User className="mr-2 h-4 w-4" />
+                  <DropdownMenuSeparator className="bg-border" />
+                  <DropdownMenuItem
+                    onClick={() => navigate("/dashboard")}
+                    className="cursor-pointer text-muted hover:text-text hover:bg-border/60 rounded-[2px] px-2 py-1.5 flex items-center gap-2"
+                  >
+                    <LayoutDashboard className="h-3.5 w-3.5" />
                     <span>Dashboard</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                  <DropdownMenuItem
+                    onClick={handleSignOut}
+                    className="cursor-pointer text-muted hover:text-text hover:bg-border/60 rounded-[2px] px-2 py-1.5 flex items-center gap-2"
+                  >
+                    <LogOut className="h-3.5 w-3.5" />
+                    <span>Sign out</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button
+              <button
+                type="button"
                 onClick={signInWithGithub}
-                variant="default"
-                size="sm"
-                className="gap-2"
+                className="flex items-center gap-1.5 h-8 px-3 rounded-[2px] border border-border bg-surface text-text font-mono text-xs hover:border-accent hover:text-ink transition-all cursor-pointer"
               >
-                <LogIn className="h-4 w-4" />
-                <span>Login</span>
-              </Button>
+                <LogIn className="h-3.5 w-3.5" />
+                <span>Sign in</span>
+              </button>
             )}
           </div>
+        </div>
 
-          {/* Mobile Menu Toggle */}
+        {/* Mobile Hamburger Button */}
+        <div className="flex items-center gap-3 lg:hidden">
           <button
-            onClick={toggleMenu}
-            className="flex items-center justify-center p-2 rounded-md md:hidden hover:bg-accent hover:text-accent-foreground"
+            type="button"
+            onClick={openCommandPalette}
+            className="p-1.5 rounded-[2px] border border-border text-muted hover:text-text"
+            aria-label="Open search"
+          >
+            <Search className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-1.5 rounded-[2px] border border-border text-muted hover:text-text"
             aria-label="Toggle menu"
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -139,62 +206,113 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Full-Screen Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden border-b border-border bg-background"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="fixed inset-0 z-50 lg:hidden bg-bg flex flex-col justify-between p-6"
           >
-            <nav className="container flex flex-col gap-4 py-4">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
+            <div>
+              <div className="flex items-center justify-between border-b border-border pb-4 mb-6">
+                <span className="font-mono text-base font-bold uppercase tracking-tight text-text">
+                  DEVMAP
+                </span>
+                <button
+                  type="button"
                   onClick={() => setIsOpen(false)}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "flex items-center text-sm font-bold text-primary px-2 py-1.5 rounded-md bg-accent/50"
-                      : "flex items-center text-sm font-medium text-muted-foreground px-2 py-1.5 rounded-md transition-colors hover:text-primary hover:bg-accent/30"
-                  }
+                  className="p-2 rounded-[2px] border border-border text-muted hover:text-text"
+                  aria-label="Close menu"
                 >
-                  {link.label}
-                </NavLink>
-              ))}
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
 
-              <div className="border-t border-border pt-4 mt-2">
-                {user ? (
-                  <div className="flex items-center justify-between px-2">
-                    <div className="flex items-center gap-3">
+              <nav className="flex flex-col gap-4 font-mono">
+                {navLinks.map((link) => (
+                  <NavLink
+                    key={link.to}
+                    to={link.to}
+                    onClick={() => setIsOpen(false)}
+                    className={({ isActive }) =>
+                      `text-base py-2 border-b border-border/60 tracking-wide transition-colors ${
+                        isActive
+                          ? "text-accent font-semibold"
+                          : "text-muted hover:text-text"
+                      }`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                ))}
+              </nav>
+            </div>
+
+            <div className="border-t border-border pt-6 flex flex-col gap-4 font-mono">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOpen(false);
+                  openCommandPalette();
+                }}
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-[2px] border border-border bg-surface text-muted text-xs"
+              >
+                <span className="flex items-center gap-2">
+                  <Search className="h-4 w-4" /> Search command palette
+                </span>
+                <kbd className="text-[10px] border border-border px-1.5 py-0.5 rounded-[2px]">
+                  ⌘K
+                </kbd>
+              </button>
+
+              {user ? (
+                <div className="flex items-center justify-between px-2 py-1">
+                  <div className="flex items-center gap-3">
+                    {user.user_metadata?.avatar_url && (
                       <img
                         src={user.user_metadata.avatar_url}
-                        alt={user.email}
-                        className="h-8 w-8 rounded-full"
+                        alt="Avatar"
+                        className="h-8 w-8 rounded-[2px] object-cover"
                       />
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium">
-                          {user.user_metadata.full_name}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          Logged in
-                        </span>
-                      </div>
+                    )}
+                    <div>
+                      <p className="text-xs font-semibold text-text">
+                        {user.user_metadata?.full_name || "Developer"}
+                      </p>
+                      <p className="text-[10px] text-muted truncate max-w-[180px]">
+                        {user.email}
+                      </p>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={handleSignOut}>
-                      <LogOut className="h-5 w-5" />
-                    </Button>
                   </div>
-                ) : (
-                  <Button onClick={signInWithGithub} className="w-full gap-2">
-                    <LogIn className="h-4 w-4" />
-                    Login with GitHub
-                  </Button>
-                )}
-              </div>
-            </nav>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsOpen(false);
+                      handleSignOut();
+                    }}
+                    className="p-2 border border-border rounded-[2px] text-muted hover:text-text"
+                    title="Sign out"
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    signInWithGithub();
+                  }}
+                  className="w-full py-2.5 rounded-[2px] border border-accent bg-accent text-on-accent text-xs font-mono font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Sign in with GitHub
+                </button>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
