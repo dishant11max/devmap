@@ -24,12 +24,21 @@ export default function Home() {
             />
           </picture>
 
-          {/* Localized soft left-edge darkening vignette */}
+          {/* Mobile backdrop: strong darkening over the top/mid section where text sits */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none lg:hidden"
             style={{
               background:
-                "linear-gradient(to right, color-mix(in srgb, var(--bg) 88%, transparent) 0%, color-mix(in srgb, var(--bg) 50%, transparent) 35%, transparent 65%)",
+                "linear-gradient(to bottom, var(--bg) 0%, color-mix(in srgb, var(--bg) 94%, transparent) 20%, color-mix(in srgb, var(--bg) 85%, transparent) 50%, color-mix(in srgb, var(--bg) 70%, transparent) 75%, var(--bg) 100%)",
+            }}
+          />
+
+          {/* Desktop localized soft left-edge darkening vignette */}
+          <div
+            className="hidden lg:block absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(to right, color-mix(in srgb, var(--bg) 92%, transparent) 0%, color-mix(in srgb, var(--bg) 60%, transparent) 35%, transparent 65%)",
             }}
           />
 
@@ -65,7 +74,7 @@ export default function Home() {
                 className="leading-relaxed mb-6 font-normal font-sans"
                 style={{
                   fontSize: "18px",
-                  color: "color-mix(in srgb, var(--text) 75%, transparent)",
+                  color: "color-mix(in srgb, var(--text) 88%, transparent)",
                 }}
               >
                 Roadmaps for languages and CS fundamentals. Track progress, keep a daily TIL log, and learn from curated resources.
